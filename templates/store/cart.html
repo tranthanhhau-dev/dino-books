@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Giỏ Hàng Sách Của Bé | Tiệm Sách Dino{% endblock %}
+
+{% block content %}
+<div class="bg-stone-50 border-b border-emerald-100 py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-heading text-2xl md:text-3xl font-black text-stone-900">
+            Giỏ Hàng Của Bé
+        </h1>
+        <p class="text-xs md:text-sm text-stone-500 mt-1">
+            Kiểm tra danh sách sách đã chọn trước khi đặt hàng
+        </p>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    {% if cart_items %}
+        <!-- Free shipping progress bar -->
+        <div class="bg-white p-4 rounded-2xl border border-emerald-200 shadow-sm mb-8">
+            <div class="flex items-center justify-between text-xs font-bold mb-2">
+                <span class="flex items-center gap-1.5 text-stone-700">
+                    <i data-lucide="truck" class="w-4 h-4 text-brand-500"></i>
+                    {% if shipping_fee == 0 %}
+                        <span class="text-emerald-600 font-extrabold">🎉 Tuyệt vời! Bạn đã được MIỄN PHÍ VẬN CHUYỂN toàn quốc!</span>
+                    {% else %}
+                        <span>Mua thêm <strong class="text-brand-600">{{ amount_needed_for_free_ship|intcomma }}đ</strong> để được <strong class="text-emerald-600">FREESHIP</strong></span>
+                    {% endif %}
+                </span>
+                <span class="text-stone-400">Đơn từ 250.000đ</span>
+            </div>
+            <div class="w-full bg-stone-100 rounded-full h-2.5 overflow-hidden">
+                <div class="bg-gradient-to-r from-brand-500 to-emerald-500 h-2.5 rounded-full transition-all duration-500" 
+                     style="width: {% if shipping_fee == 0 %}100%{% else %}{{ subtotal|floatformat:0 }}00% / 250000{% endif %}; max-width: 100%;"></div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left: Items list (8 cols) -->
+            <div class="lg:col-span-8 bg-white rounded-2xl border border-stone-200/80 shadow-sm overflow-hidden">
+                <div class="p-4 bg-stone-50/80 border-b border-stone-200 flex items-center justify-between text-xs font-bold text-stone-500">
+                    <span>Sách đã chọn ({{ cart_items|length }} tựa sách)</span>
+                    <span>Thành tiền</span>
+                </div>
+
+                <div class="divide-y divide-stone-100">
+                    {% for item in cart_items %}
+                        <div class="p-4 sm:p-5 flex gap-4 items-center justify-between">
+                            <!-- Image & Details -->
+                            <div class="flex gap-4 items-center">
+                                <a href="{% url 'store:book_detail' slug=item.book.slug %}" class="w-16 h-22 sm:w-20 sm:h-26 shrink-0 rounded-xl overflow-hidden bg-stone-100 border border-stone-200">
+                                    <img src="{{ item.book.get_image_url }}" alt="{{ item.book.title }}" class="w-full h-full object-cover">
+                                </a>
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-1.5 flex-wrap">
+                                        {% if item.book.condition %}
+                                            <span class="text-[10px] font-black {{ item.book.condition.badge_color }} px-2 py-0.5 rounded-full">
+                                                {{ item.book.condition.name }}
+                                            </span>
+                                        {% endif %}
+                                        {% if item.book.age_group %}
+                                            <span class="text-[10px] font-semibold bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full">
+                                                {{ item.book.age_group.name }}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    <h3 class="font-bold text-xs sm:text-sm text-stone-800 hover:text-brand-600">
+                                        <a href="{% url 'store:book_detail' slug=item.book.slug %}">
+                                            {{ item.book.title }}
+                                        </a>
+                                    </h3>
+                                    <p class="text-xs text-brand-600 font-extrabold">
+                                        {{ item.book.price|intcomma }} đ
+                                    </p>
+                                    <div class="text-[11px] text-stone-400">
+                                        Còn trong kho: {{ item.book.stock }} cuốn
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quantity Controls & Line Total -->
+                            <div class="flex flex-col items-end gap-2 shrink-0">
+                                <span class="font-black text-sm sm:text-base text-stone-900">
+                                    {{ item.line_total|intcomma }} đ
+                                </span>
+
+                                <div class="flex items-center gap-2">
+                                    <!-- Form decrease/increase -->
+                                    <form action="{% url 'store:update_cart' book_id=item.book.id %}" method="POST" class="inline-flex items-center border border-stone-200 rounded-lg overflow-hidden bg-stone-50">
+                                        {% csrf_token %}
+                                        <button type="submit" name="action" value="decrease" class="px-2 py-1 hover:bg-stone-200 text-xs font-bold text-stone-600">
+                                            -
+                                        </button>
+                                        <span class="px-2.5 py-1 text-xs font-bold text-stone-800 bg-white">
+                                            {{ item.quantity }}
+                                        </span>
+                                        <button type="submit" name="action" value="increase" class="px-2 py-1 hover:bg-stone-200 text-xs font-bold text-stone-600" {% if item.quantity >= item.book.stock %}disabled class="opacity-30"{% endif %}>
+                                            +
+                                        </button>
+                                    </form>
+
+                                    <!-- Delete Button -->
+                                    <a href="{% url 'store:remove_from_cart' book_id=item.book.id %}" 
+                                       title="Xóa cuốn này" 
+                                       class="text-stone-400 hover:text-rose-500 p-1 rounded-lg hover:bg-rose-50 transition-colors">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="p-4 bg-stone-50/50 border-t border-stone-100 flex items-center justify-between text-xs">
+                    <a href="{% url 'store:book_list' %}" class="font-bold text-brand-600 hover:underline flex items-center gap-1">
+                        &larr; Chọn thêm sách tiếng Anh khác
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right: Order Summary (4 cols) -->
+            <div class="lg:col-span-4 bg-white rounded-2xl border border-stone-200/80 shadow-sm p-5 space-y-4">
+                <h3 class="font-heading font-black text-base text-stone-900 border-b border-stone-100 pb-3">
+                    Tóm tắt đơn hàng
+                </h3>
+
+                <div class="space-y-2.5 text-xs">
+                    <div class="flex items-center justify-between text-stone-600">
+                        <span>Tiền sách:</span>
+                        <span class="font-bold text-stone-800">{{ subtotal|intcomma }} đ</span>
+                    </div>
+                    <div class="flex items-center justify-between text-stone-600">
+                        <span>Phí vận chuyển:</span>
+                        {% if shipping_fee == 0 %}
+                            <span class="font-bold text-emerald-600">Miễn phí (Freeship)</span>
+                        {% else %}
+                            <span class="font-bold text-stone-800">{{ shipping_fee|intcomma }} đ</span>
+                        {% endif %}
+                    </div>
+                    <div class="pt-3 border-t border-stone-100 flex items-baseline justify-between text-sm">
+                        <span class="font-bold text-stone-900">Tổng thanh toán:</span>
+                        <span class="font-black text-xl text-brand-600">{{ total|intcomma }} đ</span>
+                    </div>
+                </div>
+
+                <a href="{% url 'store:checkout' %}" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-extrabold py-3.5 px-4 rounded-xl text-center shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm">
+                    Tiến hành đặt hàng
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+
+                <div class="p-3 bg-stone-50 rounded-xl border border-stone-200/60 text-[11px] text-stone-500 space-y-1.5">
+                    <div class="flex items-center gap-1.5 font-bold text-stone-700">
+                        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+                        <span>An tâm mua sắm tại Tiệm Dino</span>
+                    </div>
+                    <p>• Kiểm tra sách thoải mái trước khi nhận</p>
+                    <p>• Thanh toán tiền mặt khi nhận sách (COD) - Đồng kiểm tra an tâm 100%</p>
+                </div>
+            </div>
+
+        </div>
+    {% else %}
+        <!-- Empty Cart -->
+        <div class="bg-white rounded-3xl border border-stone-200 p-12 text-center max-w-md mx-auto my-8">
+            <div class="w-20 h-20 bg-brand-50 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                🛒
+            </div>
+            <h3 class="font-heading font-black text-xl text-stone-900 mb-2">
+                Giỏ hàng của bé đang trống
+            </h3>
+            <p class="text-xs text-stone-500 mb-6 leading-relaxed">
+                Hàng ngàn cuốn sách tiếng Anh cũ hay ho đang chờ đón bé. Hãy khám phá và thêm vào giỏ nhé!
+            </p>
+            <a href="{% url 'store:book_list' %}" class="bg-brand-500 hover:bg-brand-600 text-white font-extrabold text-xs px-6 py-3 rounded-xl shadow transition-all inline-flex items-center gap-2">
+                <i data-lucide="compass" class="w-4 h-4"></i>
+                Khám phá kho sách ngay
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

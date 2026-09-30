@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Về Tiệm Sách Dino | Sứ Mệnh & Tiêu Chuẩn Sách Cũ Tuyển Chọn{% endblock %}
+
+{% block content %}
+<!-- Header Hero -->
+<div class="hero-pattern py-12 md:py-16 border-b border-emerald-100 text-center">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+        <div class="w-24 h-24 mx-auto rounded-full ring-4 ring-brand-300 shadow-md overflow-hidden bg-white">
+            <img src="{% static 'images/logo.png' %}" alt="Logo Tiệm Dino" class="w-full h-full object-cover">
+        </div>
+        <span class="text-xs font-black bg-brand-100 text-brand-800 px-3 py-1 rounded-full uppercase tracking-wider">
+            Câu chuyện thương hiệu
+        </span>
+        <h1 class="text-heading text-3xl md:text-4xl font-black text-stone-900">
+            Tiệm Sách Dino
+        </h1>
+        <p class="text-stone-600 text-sm md:text-base leading-relaxed max-w-2xl mx-auto">
+            Nuôi dưỡng niềm say mê đọc sách tiếng Anh cho trẻ thơ qua những cuốn sách gốc chất lượng, tiết kiệm và được yêu thương trọn vẹn.
+        </p>
+    </div>
+</div>
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 space-y-12">
+    
+    <!-- Brand Story Section -->
+    <div class="bg-white p-6 sm:p-10 rounded-3xl border border-stone-200/80 shadow-sm space-y-4 text-xs md:text-sm text-stone-600 leading-relaxed">
+        <h2 class="text-heading text-xl md:text-2xl font-black text-stone-900">
+            Khởi Nguồn Từ Tình Yêu Của Một Người Mẹ
+        </h2>
+        <p>
+            Bé Dino nhà mình từ nhỏ đã rất mê những cuốn truyện tranh tranh màu sặc sỡ và sách lật mở tiếng Anh của Usborne, Campbell hay Oxford. Nhưng ai từng mua sách tiếng Anh ngoại văn cho con đều biết: giá sách mới nhập khẩu thường khá cao (từ 200.000đ đến hơn 500.000đ mỗi cuốn), trong khi trẻ em lớn rất nhanh và nhu cầu đọc thay đổi liên tục.
+        </p>
+        <p>
+            Từ nhu cầu săn tìm sách tiếng Anh cũ chất lượng cao cho bé Dino đọc, mình nhận ra có rất nhiều gia đình nhỏ khác cũng đang tìm kiếm những cuốn sách hay, chuẩn gốc ngôn ngữ bản xứ mà giá thành lại phải chăng. <strong>Tiệm Sách Dino</strong> ra đời từ đó — nơi kết nối những cuốn sách quý giá đã hoàn thành sứ mệnh ở một gia đình này, để bước sang một hành trình mới cùng các bạn nhỏ khác.
+        </p>
+    </div>
+
+    <!-- Core Values -->
+    <div>
+        <h2 class="text-heading text-xl md:text-2xl font-black text-stone-900 text-center mb-8">
+            3 Giá Trị Cốt Lõi Tại Tiệm Dino
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-center space-y-2">
+                <span class="text-3xl">🎯</span>
+                <h3 class="font-bold text-sm text-stone-900">Tuyển chọn chuẩn mực</h3>
+                <p class="text-xs text-stone-500 leading-relaxed">
+                    100% sách xuất bản từ các NXB uy tín thế giới (Oxford, Scholastic, HarperCollins, Usborne, DK). Phân loại chính xác theo độ tuổi và trình độ đọc Lexile/AR.
+                </p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-center space-y-2">
+                <span class="text-3xl">🧼</span>
+                <h3 class="font-bold text-sm text-stone-900">Vệ sinh sạch sẽ</h3>
+                <p class="text-xs text-stone-500 leading-relaxed">
+                    Mỗi cuốn sách cũ nhập về đều được làm sạch bìa, lau khử khuẩn bằng cồn thực vật an toàn và bọc góc cẩn thận trước khi gửi đến tay bé.
+                </p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-center space-y-2">
+                <span class="text-3xl">🌱</span>
+                <h3 class="font-bold text-sm text-stone-900">Tiêu dùng xanh & Bền vững</h3>
+                <p class="text-xs text-stone-500 leading-relaxed">
+                    Đọc sách cũ là hành động thiết thực bảo vệ môi trường, giảm bớt việc chặt cây làm giấy và truyền cho con bài học biết trân trọng những trang sách.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Condition Standards Table -->
+    <div id="quy-chuan" class="bg-white p-6 sm:p-10 rounded-3xl border border-stone-200/80 shadow-sm space-y-6">
+        <div>
+            <span class="text-xs font-black bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full uppercase">
+                Tiêu chuẩn kiểm định
+            </span>
+            <h2 class="text-heading text-xl md:text-2xl font-black text-stone-900 mt-2">
+                Bảng Quy Chuẩn Đánh Giá Tình Trạng Sách
+            </h2>
+            <p class="text-xs text-stone-500 mt-1">
+                Tại Tiệm Sách Dino, mọi cuốn sách đều có ảnh chụp thật 100% và ghi chú rõ ràng về tình trạng:
+            </p>
+        </div>
+
+        <div class="divide-y divide-stone-100">
+            {% for cond in conditions %}
+                <div class="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="font-black text-sm text-stone-900">{{ cond.name }}</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold {{ cond.badge_color }}">
+                                Độ mới {{ cond.rating_percentage }}%
+                            </span>
+                        </div>
+                        <p class="text-stone-600">
+                            {{ cond.criteria }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs text-emerald-950 leading-relaxed">
+            🛡️ <strong>Chính sách đổi trả minh bạch:</strong> Nếu sách nhận được có trang bị rách, thiếu trang hoặc khác xa so với ảnh chụp trên web mà Tiệm Dino không báo trước, ba mẹ được đổi cuốn khác hoặc hoàn tiền 100% trong vòng 3 ngày kể từ khi nhận hàng.
+        </div>
+    </div>
+
+    <!-- Contact & Location -->
+    <div class="bg-gradient-to-r from-brand-700 via-dinoTeal-700 to-dinoBlue-800 rounded-3xl p-6 sm:p-10 text-white text-center space-y-4 shadow-lg shadow-brand-900/10">
+        <h3 class="text-heading text-xl sm:text-2xl font-black">
+            Ba Mẹ Cần Tư Vấn Chọn Sách Cho Bé?
+        </h3>
+        <p class="text-xs sm:text-sm text-emerald-100 max-w-lg mx-auto leading-relaxed">
+            Hãy nhắn tuổi của bé và sở thích (khủng long, vũ trụ, công chúa, truyện cười...) cho Tiệm Dino, mình sẽ gợi ý những cuốn sách phù hợp nhất cho con nhé!
+        </p>
+        <div class="pt-2 flex flex-wrap justify-center gap-3">
+            <a href="https://zalo.me/{{ shop_zalo }}" target="_blank" class="bg-white hover:bg-emerald-50 text-brand-700 font-extrabold px-6 py-3 rounded-xl text-xs sm:text-sm shadow transition-all">
+                Nhắn tin Zalo với Tiệm Dino
+            </a>
+            <a href="{% url 'store:book_list' %}" class="bg-brand-800/80 hover:bg-brand-900 text-white font-bold px-6 py-3 rounded-xl text-xs sm:text-sm border border-white/30 transition-all">
+                Dạo xem kho sách ngay
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

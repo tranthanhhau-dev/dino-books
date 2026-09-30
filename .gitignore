@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+tunnel.log
+cloudflared.exe
+git_bin/
+staticfiles/
+.env
+.venv
+env/
+venv/
+ENV/
+.idea/
+.vscode/
+BAN SACH APP/

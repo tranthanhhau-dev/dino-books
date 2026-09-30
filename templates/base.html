@@ -1,0 +1,402 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tiệm Sách Dino - Sách Tiếng Anh Tuyển Chọn Cho Thiếu Nhi & Trẻ Vị Thành Niên{% endblock %}</title>
+    <meta name="description" content="Tiệm sách tiếng Anh cũ chất lượng cao dành riêng cho trẻ em và thiếu niên. Tiết kiệm 50-70%, tuyển chọn kỹ lưỡng, ảnh thật 100%, đồng hành cùng hành trình song ngữ của con.">
+    <link rel="icon" href="{% static 'images/logo.png' %}" type="image/png">
+    
+    <!-- PWA & Mobile App Meta Tags -->
+    <link rel="manifest" href="{% url 'store:manifest' %}">
+    <meta name="theme-color" content="#16a34a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Tiệm Sách Dino">
+    <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#16a34a', // Dino vibrant green
+                            600: '#15803d',
+                            700: '#166534',
+                            800: '#14532d',
+                            900: '#052e16',
+                        },
+                        dinoBlue: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0284c7', // Sky / ocean blue
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                            900: '#082f49',
+                        },
+                        dinoTeal: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6', // Fresh teal
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        },
+                        botTeal: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                        },
+                        cream: '#F4FAF8',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            background-color: #F8FCFA;
+            color: #1E293B;
+        }
+        .text-heading {
+            font-family: 'Quicksand', sans-serif;
+        }
+        .hero-pattern {
+            background-color: #F0FDF4;
+            background-image: radial-gradient(#86efac 0.85px, transparent 0.85px), radial-gradient(#86efac 0.85px, #F0FDF4 0.85px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+        .card-hover {
+            transition: all 0.25s ease-in-out;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(22, 163, 74, 0.2), 0 4px 6px -2px rgba(2, 132, 199, 0.08);
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="flex flex-col min-h-screen font-sans selection:bg-brand-200 selection:text-brand-900 pb-16 md:pb-0">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-gradient-to-r from-brand-600 via-dinoTeal-600 to-dinoBlue-600 text-white text-xs md:text-sm py-2 px-4 text-center font-medium shadow-sm flex items-center justify-center gap-2">
+        <span class="inline-block animate-bounce">🦖</span>
+        <span><strong>Freeship toàn quốc</strong> cho đơn từ 250k | Tặng bookmark & sticker khủng long Dino luyện đọc tiếng Anh cho bé</span>
+        <span class="hidden md:inline">| Hotline & Zalo: <a href="tel:{{ shop_hotline }}" class="underline font-bold">{{ shop_hotline }}</a></span>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-emerald-100 shadow-sm transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-4">
+                
+                <!-- Logo & Brand -->
+                <a href="{% url 'store:home' %}" class="flex items-center gap-3 shrink-0 group">
+                    <img src="{% static 'images/logo.png' %}" alt="Logo Tiệm Sách Dino" class="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover shadow-sm ring-2 ring-brand-400 group-hover:scale-105 transition-transform" />
+                    <div>
+                        <div class="font-heading font-extrabold text-xl md:text-2xl text-brand-700 tracking-tight flex items-center gap-1">
+                            Tiệm Sách Dino 🦖
+                            <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-sans font-semibold hidden sm:inline-block">Used Books</span>
+                        </div>
+                        <p class="text-xs text-stone-500 font-medium hidden sm:block">Sách tiếng Anh tuyển chọn cho bé & teens</p>
+                    </div>
+                </a>
+
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-xl hidden md:block">
+                    <form action="{% url 'store:book_list' %}" method="GET" class="relative">
+                        <input type="text" name="q" value="{{ request.GET.q|default:'' }}" 
+                               placeholder="Tìm theo tên sách, tác giả (Roald Dahl, Usborne, Peppa Pig, Harry Potter...)" 
+                               class="w-full pl-11 pr-24 py-2.5 bg-stone-50 border border-stone-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 focus:bg-white transition-all shadow-inner">
+                        <i data-lucide="search" class="w-5 h-5 absolute left-3.5 top-3 text-stone-400"></i>
+                        <button type="submit" class="absolute right-1.5 top-1.5 bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold px-4 py-1.5 rounded-full transition-colors">
+                            Tìm kiếm
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-3 sm:gap-4">
+                    <!-- Tra cứu đơn -->
+                    <a href="{% url 'store:order_tracking' %}" class="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-brand-600 bg-stone-100 hover:bg-stone-200 px-3 py-2 rounded-xl transition-colors">
+                        <i data-lucide="truck" class="w-4 h-4 text-brand-500"></i>
+                        Tra cứu đơn
+                    </a>
+
+                    <!-- Ký gửi sách -->
+                    <a href="{% url 'store:trade_in' %}" class="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-2 rounded-xl transition-colors">
+                        <i data-lucide="repeat" class="w-4 h-4 text-emerald-600"></i>
+                        Ký gửi / Bán lại sách
+                    </a>
+
+                    <!-- Giỏ hàng -->
+                    <a href="{% url 'store:cart' %}" class="relative flex items-center gap-2 bg-brand-50 hover:bg-brand-100 border border-brand-200 text-brand-700 font-bold px-3.5 py-2 rounded-2xl transition-all shadow-sm">
+                        <i data-lucide="shopping-bag" class="w-5 h-5 text-brand-600"></i>
+                        <span class="hidden sm:inline text-sm">Giỏ hàng</span>
+                        <span class="bg-brand-600 text-white text-xs font-black rounded-full h-5 min-w-[20px] px-1.5 flex items-center justify-center animate-pulse">
+                            {{ cart_count }}
+                        </span>
+                    </a>
+
+                    <!-- Quản lý đơn hàng (Chủ tiệm) -->
+                    <a href="{% url 'store:orders_dashboard' %}" class="hidden md:flex items-center gap-1.5 text-xs font-bold text-dinoBlue-900 bg-dinoBlue-100 hover:bg-dinoBlue-200 px-3 py-2 rounded-xl transition-colors" title="Bảng quản trị đơn hàng">
+                        <i data-lucide="clipboard-list" class="w-4 h-4 text-dinoBlue-600"></i>
+                        <span>Quản lý đơn</span>
+                    </a>
+
+                    <!-- Admin Link -->
+                    <a href="/admin/" title="Đăng nhập Quản trị viên Django" class="p-2 text-stone-400 hover:text-stone-700 rounded-full hover:bg-stone-100 transition-colors">
+                        <i data-lucide="user-cog" class="w-5 h-5"></i>
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Sub Nav Links / Age Categories -->
+            <div class="border-t border-emerald-50 py-2.5 flex items-center justify-between overflow-x-auto no-scrollbar text-xs md:text-sm gap-2">
+                <div class="flex items-center gap-1 md:gap-2 shrink-0">
+                    <a href="{% url 'store:book_list' %}" class="font-bold text-brand-600 hover:text-brand-700 px-3 py-1 rounded-lg bg-brand-50 hover:bg-brand-100 flex items-center gap-1">
+                        <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+                        Tất cả sách
+                    </a>
+                    <span class="text-stone-300">|</span>
+                    <span class="text-stone-400 font-semibold px-1 text-xs uppercase tracking-wider hidden sm:inline">Theo độ tuổi:</span>
+                    {% for age in all_age_groups %}
+                        <a href="{% url 'store:book_list' %}?age={{ age.slug }}" 
+                            class="px-2.5 py-1 rounded-full text-stone-600 hover:text-brand-600 hover:bg-brand-50 font-medium transition-colors shrink-0">
+                            {{ age.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+                <div class="hidden lg:flex items-center gap-3 shrink-0 text-xs font-semibold text-stone-500">
+                    <a href="{% url 'store:about' %}" class="hover:text-brand-600">Về Tiệm Dino</a>
+                    <span>•</span>
+                    <a href="{% url 'store:about' %}#quy-chuan" class="hover:text-brand-600">Quy chuẩn độ mới sách cũ</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Search Bar (Only visible on small screens) -->
+        <div class="md:hidden px-4 pb-3">
+            <form action="{% url 'store:book_list' %}" method="GET" class="relative">
+                <input type="text" name="q" value="{{ request.GET.q|default:'' }}" 
+                       placeholder="Tìm kiếm sách thiếu nhi, tác giả..." 
+                       class="w-full pl-10 pr-20 py-2 bg-stone-100 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-brand-400">
+                <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-2.5 text-stone-400"></i>
+                <button type="submit" class="absolute right-1 top-1 bg-brand-500 text-white text-xs px-3 py-1 rounded-full">
+                    Tìm
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <!-- Django Messages Toast -->
+    {% if messages %}
+        <div class="max-w-3xl mx-auto px-4 pt-4 w-full">
+            {% for message in messages %}
+                <div class="p-3.5 mb-2 text-sm rounded-xl flex items-center justify-between gap-3 shadow-sm border
+                    {% if message.tags == 'success' %} bg-emerald-50 text-emerald-800 border-emerald-200
+                    {% elif message.tags == 'warning' %} bg-amber-50 text-amber-800 border-amber-200
+                    {% elif message.tags == 'error' %} bg-rose-50 text-rose-800 border-rose-200
+                    {% else %} bg-blue-50 text-blue-800 border-blue-200 {% endif %}">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check-circle" class="w-5 h-5 shrink-0"></i>
+                        <span>{{ message }}</span>
+                    </div>
+                    <button onclick="this.parentElement.remove()" class="text-stone-400 hover:text-stone-600">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content Block -->
+    <main class="flex-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-300 pt-12 pb-8 mt-16 border-t border-stone-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+                <!-- Col 1: Giới thiệu -->
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="{% static 'images/logo.png' %}" alt="Logo Tiệm Sách Dino" class="w-12 h-12 rounded-full object-cover ring-2 ring-brand-400" />
+                        <div>
+                            <span class="text-heading font-extrabold text-white text-xl">Tiệm Sách Dino</span>
+                            <p class="text-xs text-stone-400">English Books for Kids & Teens</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-stone-400 leading-relaxed mb-4">
+                        Tiệm sách cũ chuyên dòng sách tiếng Anh nhập khẩu chất lượng cao cho thiếu nhi từ 0-16 tuổi. Giúp con mở rộng thế giới tri thức song ngữ với chi phí tiết kiệm nhất.
+                    </p>
+                    <div class="flex items-center gap-3 text-stone-400">
+                        <a href="https://zalo.me/{{ shop_zalo }}" target="_blank" class="w-9 h-9 rounded-full bg-stone-800 hover:bg-brand-500 flex items-center justify-center transition-colors">
+                            <span class="font-bold text-xs">Zalo</span>
+                        </a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-stone-800 hover:bg-brand-500 flex items-center justify-center transition-colors">
+                            <i data-lucide="facebook" class="w-4 h-4"></i>
+                        </a>
+                        <a href="tel:{{ shop_hotline }}" class="w-9 h-9 rounded-full bg-stone-800 hover:bg-brand-500 flex items-center justify-center transition-colors">
+                            <i data-lucide="phone-call" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Col 2: Danh mục nổi bật -->
+                <div>
+                    <h4 class="text-heading font-bold text-white text-sm uppercase tracking-wider mb-4 border-l-2 border-brand-500 pl-2">Khám phá theo tuổi</h4>
+                    <ul class="space-y-2 text-xs">
+                        {% for age in all_age_groups %}
+                            <li>
+                                <a href="{% url 'store:book_list' %}?age={{ age.slug }}" class="hover:text-brand-400 transition-colors flex items-center gap-1.5">
+                                    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-stone-500"></i>
+                                    {{ age.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Col 3: Cam kết & Chính sách -->
+                <div>
+                    <h4 class="text-heading font-bold text-white text-sm uppercase tracking-wider mb-4 border-l-2 border-dinoTeal-500 pl-2">Cam kết của Tiệm Dino</h4>
+                    <ul class="space-y-2.5 text-xs text-stone-300">
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                            <span>100% Sách gốc bản quyền (Usborne, Oxford, Scholastic, HarperCollins...)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="camera" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                            <span>Ảnh chụp thật từng cuốn, mô tả đúng độ mới & chi tiết lỗi nếu có</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="refresh-cw" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                            <span>Đổi trả miễn phí 3 ngày nếu sách không đúng như hình ảnh và mô tả</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="truck" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                            <span>Giao hàng nhanh toàn quốc, kiểm tra sách trước khi thanh toán</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Liên hệ & Hỗ trợ -->
+                <div>
+                    <h4 class="text-heading font-bold text-white text-sm uppercase tracking-wider mb-4 border-l-2 border-dinoBlue-400 pl-2">Hỗ trợ khách hàng</h4>
+                    <p class="text-xs text-stone-400 mb-2">Cần tư vấn chọn sách phù hợp với lứa tuổi & trình độ của con?</p>
+                    <div class="bg-stone-800/80 p-3.5 rounded-xl border border-stone-700/60 mb-3 space-y-1.5">
+                        <p class="text-xs text-stone-400">Hotline / Zalo tư vấn:</p>
+                        <a href="https://zalo.me/{{ shop_zalo }}" target="_blank" class="text-base font-extrabold text-emerald-400 hover:underline flex items-center gap-1.5">
+                            <i data-lucide="phone" class="w-4 h-4"></i>
+                            {{ shop_hotline }}
+                        </a>
+                        <p class="text-xs text-stone-400 pt-1">Email hỗ trợ:</p>
+                        <a href="mailto:{{ shop_email }}" class="text-xs font-bold text-sky-400 hover:underline flex items-center gap-1.5">
+                            <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                            {{ shop_email }}
+                        </a>
+                        <p class="text-[11px] text-stone-500 pt-1">Hỗ trợ ba mẹ từ 8h00 - 22h00 mỗi ngày</p>
+                    </div>
+                    <a href="{% url 'store:trade_in' %}" class="inline-flex items-center gap-1.5 text-xs text-dinoTeal-400 hover:text-dinoTeal-300 font-semibold">
+                        <i data-lucide="repeat" class="w-3.5 h-3.5"></i>
+                        Gửi sách thanh lý / ký gửi cho Tiệm Dino &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- Copyright & Payment icons -->
+            <div class="border-t border-stone-800 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-500 gap-4">
+                <p>© 2026 <strong>Tiệm Sách Dino</strong>. All rights reserved. Đồng hành cùng tình yêu sách của trẻ thơ.</p>
+                <div class="flex items-center gap-2">
+                    <span class="bg-stone-800 px-2 py-1 rounded text-[11px] text-stone-400 font-medium">COD Toàn quốc</span>
+                    <span class="bg-stone-800 px-2 py-1 rounded text-[11px] text-stone-400 font-medium">Kiểm tra sách trước khi thanh toán</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Bottom Navigation (Chỉ hiện trên điện thoại) -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-emerald-200 z-50 flex items-center justify-around py-2 shadow-lg">
+        <a href="{% url 'store:home' %}" class="flex flex-col items-center gap-1 text-[11px] font-bold {% if request.resolver_match.url_name == 'home' %}text-brand-600{% else %}text-stone-500{% endif %}">
+            <i data-lucide="home" class="w-5 h-5"></i>
+            Trang chủ
+        </a>
+        <a href="{% url 'store:book_list' %}" class="flex flex-col items-center gap-1 text-[11px] font-bold {% if request.resolver_match.url_name == 'book_list' %}text-brand-600{% else %}text-stone-500{% endif %}">
+            <i data-lucide="book-open" class="w-5 h-5"></i>
+            Kho sách
+        </a>
+        <a href="{% url 'store:cart' %}" class="flex flex-col items-center gap-1 text-[11px] font-bold relative {% if request.resolver_match.url_name == 'cart' %}text-brand-600{% else %}text-stone-500{% endif %}">
+            <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+            <span>Giỏ hàng</span>
+            {% if cart_count > 0 %}
+                <span class="absolute -top-1 -right-2 bg-brand-600 text-white rounded-full text-[10px] w-4 h-4 flex items-center justify-center font-bold">
+                    {{ cart_count }}
+                </span>
+            {% endif %}
+        </a>
+        <a href="{% url 'store:trade_in' %}" class="flex flex-col items-center gap-1 text-[11px] font-bold {% if request.resolver_match.url_name == 'trade_in' %}text-brand-600{% else %}text-stone-500{% endif %}">
+            <i data-lucide="repeat" class="w-5 h-5"></i>
+            Ký gửi
+        </a>
+        <a href="https://zalo.me/{{ shop_zalo }}" target="_blank" class="flex flex-col items-center gap-1 text-[11px] font-bold text-stone-500 hover:text-brand-600">
+            <i data-lucide="message-circle" class="w-5 h-5 text-botTeal-600"></i>
+            Tư vấn
+        </a>
+    </nav>
+
+    <!-- Init Lucide Icons -->
+    <script>
+        lucide.createIcons();
+
+        // Đăng ký Service Worker cho PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                    console.log('PWA ServiceWorker ready: ', reg.scope);
+                }).catch(function(err) {
+                    console.log('PWA ServiceWorker error: ', err);
+                });
+            });
+        }
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

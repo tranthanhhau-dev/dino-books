@@ -1,0 +1,363 @@
+from django.core.management.base import BaseCommand
+from django.contrib.auth.models import User
+from store.models import Category, AgeGroup, BookCondition, Book, CustomerReview
+
+class Command(BaseCommand):
+    help = "Tạo dữ liệu mẫu ban đầu cho Tiệm Sách Dino"
+
+    def handle(self, *args, **kwargs):
+        self.stdout.write("Bat dau nap du lieu mau...")
+
+        # 1. Tao Superuser Admin
+        if not User.objects.filter(username="admin").exists():
+            User.objects.create_superuser("admin", "admin@tiemsachdino.vn", "admindino123")
+            self.stdout.write(self.style.SUCCESS("Da tao tai khoan quan tri admin / admindino123"))
+
+
+        # 2. Tạo Thể Loại
+        categories_data = [
+            ("Sách Tranh & Lật Mở Tương Tác", "board-lift-the-flap", "Sách sờ chạm touch & feel, lật mở khám phá cho bé nhỏ", "sparkles", "bg-pink-100 text-pink-800", 1),
+            ("Picture Books - Truyện Tranh Màu", "picture-books", "Những câu chuyện giàu cảm xúc kèm tranh vẽ tuyệt đẹp", "palette", "bg-purple-100 text-purple-800", 2),
+            ("Phonics & Luyện Đánh Vần Sớm", "phonics", "Luyện ngữ âm, từ vựng và kỹ năng ghép vần tiếng Anh", "mic", "bg-amber-100 text-amber-800", 3),
+            ("Early Readers & Oxford Reading Tree", "early-readers", "Sách phân cấp từ vựng cho bé bắt đầu tự đọc một mình", "book-open", "bg-blue-100 text-blue-800", 4),
+            ("Truyện Tranh & Graphic Novels", "graphic-novels", "Truyện hài hước kích thích niềm vui đọc sách (Dog Man, Wimpy Kid...)", "smile", "bg-yellow-100 text-yellow-800", 5),
+            ("Tiểu Thuyết Thiếu Nhi (Chapter Books)", "chapter-books", "Các tác phẩm kinh điển của Roald Dahl, E.B. White...", "bookmark", "bg-emerald-100 text-emerald-800", 6),
+            ("Young Adult & Tiểu Thuyết Tuổi Teen (13+)", "young-adult", "Dành cho học sinh cấp 2, cấp 3: Harry Potter, Percy Jackson...", "compass", "bg-indigo-100 text-indigo-800", 7),
+            ("Bách Khoa Tri Thức & Khoa Học STEM", "science-stem", "Khám phá tự nhiên, vũ trụ, động vật, thí nghiệm khoa học", "atom", "bg-teal-100 text-teal-800", 8),
+        ]
+
+        cat_objs = {}
+        for name, slug, desc, icon, badge_bg, order in categories_data:
+            cat, _ = Category.objects.get_or_create(
+                slug=slug,
+                defaults={'name': name, 'description': desc, 'icon': icon, 'badge_bg': badge_bg, 'order': order}
+            )
+            cat_objs[slug] = cat
+
+        # 3. Tạo Nhóm Độ Tuổi
+        age_data = [
+            ("0 - 3 tuổi (Baby & Toddler)", "0-3-tuoi", "Sách sờ chạm, tranh to, ít chữ, an toàn cho bé gặm nhấm", "bg-rose-100 text-rose-800", 1),
+            ("4 - 6 tuổi (Mầm non & Pre-K)", "4-6-tuoi", "Picture books, phonics, truyện vui ngắn, học từ vựng qua hình ảnh", "bg-amber-100 text-amber-800", 2),
+            ("7 - 9 tuổi (Tiểu học / Early Grade)", "7-9-tuoi", "Sách truyện chương ngắn có minh họa, truyện tranh thiếu nhi", "bg-emerald-100 text-emerald-800", 3),
+            ("10 - 12 tuổi (Middle Grade)", "10-12-tuoi", "Tiểu thuyết thiếu nhi phiêu lưu, trinh thám, hài hước, STEM", "bg-sky-100 text-sky-800", 4),
+            ("13+ tuổi (Young Adult / Teen)", "13-plus-teen", "Tiểu thuyết kỳ ảo, văn học kinh điển, phát triển bản thân", "bg-purple-100 text-purple-800", 5),
+        ]
+
+        age_objs = {}
+        for name, slug, desc, badge_color, order in age_data:
+            age, _ = AgeGroup.objects.get_or_create(
+                slug=slug,
+                defaults={'name': name, 'description': desc, 'badge_color': badge_color, 'order': order}
+            )
+            age_objs[slug] = age
+
+        # 4. Tạo Tình Trạng Sách
+        cond_data = [
+            ("Like New 98% - 99%", 98, "bg-emerald-100 text-emerald-800", "Gần như mới tinh, bìa phẳng gáy sắc, không nếp gấp hay vết viết vẽ."),
+            ("Rất tốt 90% - 95%", 92, "bg-blue-100 text-blue-800", "Bìa và gáy rất đẹp, ruột sạch tinh tươm, chỉ có dấu lật giở rất nhẹ."),
+            ("Tốt 80% - 85%", 85, "bg-amber-100 text-amber-800", "Ruột sách tốt, gáy chắc chắn, 100% nguyên vẹn trang, có vết ố thời gian nhẹ ở mép ngoài."),
+            ("Khá 70% - 75%", 72, "bg-stone-200 text-stone-700", "Có nếp gấp bìa hoặc mép trang, chữ và tranh minh họa bên trong rõ ràng hoàn toàn."),
+        ]
+
+        cond_objs = {}
+        for name, rating, badge_color, criteria in cond_data:
+            cond, _ = BookCondition.objects.get_or_create(
+                name=name,
+                defaults={'rating_percentage': rating, 'badge_color': badge_color, 'criteria': criteria}
+            )
+            cond_objs[rating] = cond
+
+        # 5. Tạo Sách Mẫu
+        sample_books = [
+            {
+                "title": "The Very Hungry Caterpillar",
+                "vietnamese_title": "Chú Sâu Háu Ăn (Bản bìa cứng Board Book kinh điển thế giới)",
+                "author": "Eric Carle",
+                "publisher": "World of Eric Carle / Penguin",
+                "category": cat_objs["board-lift-the-flap"],
+                "age_group": age_objs["0-3-tuoi"],
+                "condition": cond_objs[98],
+                "condition_detail": "Bìa bồi cứng cáp, các lỗ khoét sâu sắc nét, không gãy góc, sạch đẹp như mới 99%.",
+                "original_price": 280000,
+                "price": 85000,
+                "stock": 1,
+                "reading_level": "Lexile 460L / Early Picture Book",
+                "pages": 32,
+                "cover_type": "board_book",
+                "publication_year": 2021,
+                "isbn": "978-0399226908",
+                "description": "Cuốn sách bìa cứng không thể thiếu trong tuổi thơ của mọi em bé! Kể về hành trình từ chú sâu nhỏ háu ăn qua từng món đồ ăn trong tuần đến khi hóa thành chú bướm rực rỡ sắc màu. Giúp bé học số đếm, các thứ trong tuần, tên các loại quả và món ăn bằng tiếng Anh một cách tự nhiên nhất.",
+                "image_url_fallback": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+                "is_featured": True,
+                "is_hot_deal": True,
+            },
+            {
+                "title": "Where's Spot? (Lift-the-flap Book)",
+                "vietnamese_title": "Chú Chó Spot Đang Ở Đâu? (Sách lật mở tương tác)",
+                "author": "Eric Hill",
+                "publisher": "Puffin Books",
+                "category": cat_objs["board-lift-the-flap"],
+                "age_group": age_objs["0-3-tuoi"],
+                "condition": cond_objs[92],
+                "condition_detail": "Tất cả các miếng lật flap còn nguyên vẹn 100%, gáy sách chắc, bìa bóng đẹp.",
+                "original_price": 250000,
+                "price": 75000,
+                "stock": 1,
+                "reading_level": "Toddler Interactive",
+                "pages": 24,
+                "cover_type": "flap_sound",
+                "publication_year": 2020,
+                "isbn": "978-0141343754",
+                "description": "Mẹ chó Sally đi tìm chú cún con Spot khắp nhà: trong tủ quần áo, dưới gầm giường, trong đồng hồ quả lắc... Mỗi trang đều có miếng lật mở tương tác cực kỳ kích thích sự tò mò và phối hợp tay mắt của bé.",
+                "image_url_fallback": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
+                "is_featured": True,
+                "is_hot_deal": False,
+            },
+            {
+                "title": "Dear Zoo: A Lift-the-Flap Book",
+                "vietnamese_title": "Gửi Sở Thú (Sách lật mở học từ vựng con vật kinh điển 40 năm)",
+                "author": "Rod Campbell",
+                "publisher": "Macmillan Children's Books",
+                "category": cat_objs["board-lift-the-flap"],
+                "age_group": age_objs["0-3-tuoi"],
+                "condition": cond_objs[98],
+                "condition_detail": "Bìa bồi dày, các nắp mở thùng hàng còn thẳng thớm tinh tươm.",
+                "original_price": 260000,
+                "price": 79000,
+                "stock": 1,
+                "reading_level": "Ages 1-4",
+                "pages": 18,
+                "cover_type": "board_book",
+                "publication_year": 2022,
+                "isbn": "978-0230747760",
+                "description": "Em bé viết thư cho sở thú xin một con thú cưng. Nhưng họ lại gửi đến: con voi quá to (too big!), hươu cao cổ quá cao (too tall!), lạc đà thì quá cáu kỉnh (too grumpy!)... Cuối cùng con vật nào sẽ là lựa chọn hoàn hảo?",
+                "image_url_fallback": "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=600&q=80",
+                "is_featured": True,
+                "is_hot_deal": True,
+            },
+            {
+                "title": "Peep Inside Animal Homes",
+                "vietnamese_title": "Usborne Peep Inside: Tổ Ấm Của Các Loài Động Vật",
+                "author": "Anna Milbourne",
+                "publisher": "Usborne Publishing UK",
+                "category": cat_objs["board-lift-the-flap"],
+                "age_group": age_objs["4-6-tuoi"],
+                "condition": cond_objs[98],
+                "condition_detail": "Sách Usborne chuẩn Anh, các vết cắt tỉ mỉ peep inside nguyên vẹn 100%.",
+                "original_price": 320000,
+                "price": 95000,
+                "stock": 1,
+                "reading_level": "Usborne Peep Inside",
+                "pages": 14,
+                "cover_type": "board_book",
+                "publication_year": 2022,
+                "isbn": "978-1409550181",
+                "description": "Khám phá tổ ấm kỳ thú của các loài vật: tổ ong mật, hang thỏ dưới lòng đất, tổ chim trên cành cao hay hang sóc trong thân cây. Dòng sách Peep Inside của Usborne luôn mê hoặc cả trẻ nhỏ lẫn người lớn bởi tranh vẽ ngọt ngào và các lớp cắt layer công phu.",
+                "image_url_fallback": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=600&q=80",
+                "is_featured": True,
+                "is_hot_deal": False,
+            },
+            {
+                "title": "Oxford Reading Tree: Biff, Chip and Kipper - The Magic Key",
+                "vietnamese_title": "Bộ Sách Đọc Phân Cấp Nổi Tiếng Nhất Nước Anh (Level 5)",
+                "author": "Roderick Hunt & Alex Brychta",
+                "publisher": "Oxford University Press",
+                "category": cat_objs["early-readers"],
+                "age_group": age_objs["4-6-tuoi"],
+                "condition": cond_objs[92],
+                "condition_detail": "Ruột sách bóng đẹp, tranh màu sắc nét, không gãy gáy.",
+                "original_price": 180000,
+                "price": 45000,
+                "stock": 2,
+                "reading_level": "ORT Stage 5 / Guided Reading",
+                "pages": 32,
+                "cover_type": "paperback",
+                "publication_year": 2020,
+                "isbn": "978-0198482703",
+                "description": "Chiếc chìa khóa thần kỳ bắt đầu phát sáng và đưa Biff, Chip cùng chú chó Floppy vào những cuộc phiêu lưu xuyên không gian và thời gian! Bộ sách ORT được hơn 80% trường tiểu học tại Vương quốc Anh tin dùng để dạy trẻ học đọc.",
+                "image_url_fallback": "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=600&q=80",
+                "is_featured": False,
+                "is_hot_deal": True,
+            },
+            {
+                "title": "Dog Man: Brawl of the Wild (Full Color)",
+                "vietnamese_title": "Người Chó Dog Man: Tập 6 (Truyện tranh màu hài hước số 1 New York Times)",
+                "author": "Dav Pilkey",
+                "publisher": "Scholastic Inc.",
+                "category": cat_objs["graphic-novels"],
+                "age_group": age_objs["7-9-tuoi"],
+                "condition": cond_objs[92],
+                "condition_detail": "Bìa cứng sắc cạnh, 240 trang in màu hoàn toàn sạch bóng đẹp.",
+                "original_price": 350000,
+                "price": 115000,
+                "stock": 1,
+                "reading_level": "Lexile 390L / Graphic Novel",
+                "pages": 240,
+                "cover_type": "hardcover",
+                "publication_year": 2019,
+                "isbn": "978-1338236576",
+                "description": "Dog Man bị vu oan và tống vào tù! Liệu những người bạn thân thiết có giải cứu được anh chàng hiệp sĩ nửa người nửa chó yêu quý này? Cuốn truyện tranh siêu hài hước khiến bất kỳ đứa trẻ nào cũng phải cười nghiêng ngả và tự giác cầm sách đọc say mê.",
+                "image_url_fallback": "https://images.unsplash.com/photo-1618609377864-68609b857e90?auto=format&fit=crop&w=600&q=80",
+                "is_featured": True,
+                "is_hot_deal": False,
+            },
+            {
+                "title": "Diary of a Wimpy Kid: Rodrick Rules",
+                "vietnamese_title": "Nhật Ký Chú Bé Nhút Nhát: Tập 2 - Luật Của Rodrick",
+                "author": "Jeff Kinney",
+                "publisher": "Amulet Books / Puffin",
+                "category": cat_objs["graphic-novels"],
+                "age_group": age_objs["7-9-tuoi"],
+                "condition": cond_objs[85],
+                "condition_detail": "Bìa mềm nguyên vẹn, gáy chắc, giấy ngà màu tự nhiên đọc rất êm mắt.",
+                "original_price": 220000,
+                "price": 65000,
+                "stock": 1,
+                "reading_level": "Lexile 910L / Grade 4-7",
+                "pages": 224,
+                "cover_type": "paperback",
+                "publication_year": 2018,
+                "isbn": "978-0141324913",
+                "description": "Greg Heffley bước vào năm học mới nhưng bí mật tồi tệ vào mùa hè vừa qua lại rơi vào tay người anh trai quái chiêu Rodrick. Cuốn sách mang tính biểu tượng đã giúp hàng triệu bạn nhỏ trên toàn cầu từ chỗ lười đọc trở thành những mọt sách chính hiệu.",
+                "image_url_fallback": "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80",
+                "is_featured": True,
+                "is_hot_deal": True,
+            },
+            {
+                "title": "Matilda",
+                "vietnamese_title": "Cô Bé Matilda (Tác phẩm văn học thiếu nhi kinh điển của Roald Dahl)",
+                "author": "Roald Dahl (Minh họa Quentin Blake)",
+                "publisher": "Puffin Books",
+                "category": cat_objs["chapter-books"],
+                "age_group": age_objs["10-12-tuoi"],
+                "condition": cond_objs[92],
+                "condition_detail": "Gáy sách thẳng đẹp, ruột sách sạch tinh, tranh minh họa sắc nét.",
+                "original_price": 240000,
+                "price": 75000,
+                "stock": 1,
+                "reading_level": "Lexile 840L / AR 5.0",
+                "pages": 240,
+                "cover_type": "paperback",
+                "publication_year": 2020,
+                "isbn": "978-0141365466",
+                "description": "Matilda là một cô bé thiên tài với tình yêu sách vô bờ bến và sở hữu năng lực dịch chuyển đồ vật bằng suy nghĩ. Câu chuyện cảm động về lòng dũng cảm chống lại sự bất công của hiệu trưởng Trunchbull và tình bạn tuyệt vời với cô giáo Honey.",
+                "image_url_fallback": "https://images.unsplash.com/photo-1476275466078-4007374efbbe?auto=format&fit=crop&w=600&q=80",
+                "is_featured": True,
+                "is_hot_deal": False,
+            },
+            {
+                "title": "Harry Potter and the Sorcerer's Stone",
+                "vietnamese_title": "Harry Potter Và Hòn Đá Phù Thủy (Bản tiếng Anh gốc Scholastic)",
+                "author": "J.K. Rowling",
+                "publisher": "Scholastic Press USA",
+                "category": cat_objs["young-adult"],
+                "age_group": age_objs["13-plus-teen"],
+                "condition": cond_objs[85],
+                "condition_detail": "Bìa mềm gốc Scholastic có nếp gấp nhẹ ở góc bìa, ruột sách sạch bóng đầy đủ trang.",
+                "original_price": 290000,
+                "price": 89000,
+                "stock": 1,
+                "reading_level": "Lexile 880L / CEFR B1+",
+                "pages": 320,
+                "cover_type": "paperback",
+                "publication_year": 2018,
+                "isbn": "978-0590353427",
+                "description": "Hành trình bước vào thế giới phù thủy Hogwarts của cậu bé mồ côi Harry Potter. Cuốn sách tiếng Anh mở đầu huyền thoại văn học thế kỷ 21, là món quà tuyệt vời nhất để các bạn thiếu niên nâng cao vốn từ vựng và đắm chìm vào ngôn ngữ Anh tự nhiên.",
+                "image_url_fallback": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
+                "is_featured": True,
+                "is_hot_deal": False,
+            },
+            {
+                "title": "Big Fat Notebook: Everything You Need to Ace Science",
+                "vietnamese_title": "Sổ Tay Bách Khoa Khoa Học Dành Cho Học Sinh Trung Học",
+                "author": "Workman Publishing",
+                "publisher": "Workman Publishing USA",
+                "category": cat_objs["science-stem"],
+                "age_group": age_objs["10-12-tuoi"],
+                "condition": cond_objs[98],
+                "condition_detail": "Bìa dày dập nổi rất đẹp, hơn 500 trang in màu kèm sơ đồ tư duy mindmap sạch tinh.",
+                "original_price": 450000,
+                "price": 165000,
+                "stock": 1,
+                "reading_level": "Middle School STEM / Grade 6-8",
+                "pages": 528,
+                "cover_type": "hardcover",
+                "publication_year": 2021,
+                "isbn": "978-0761160953",
+                "description": "Cuốn sổ tay khoa học bán chạy nhất nước Mỹ! Hệ thống hóa toàn bộ kiến thức Vật lý, Hóa học, Sinh học, Khoa học Trái đất bằng hình vẽ ngộ nghĩnh, highlight màu sắc và các mẹo ghi nhớ cực kỳ dễ hiểu. Cực kỳ hữu ích cho các bạn học sinh trường quốc tế hoặc song ngữ.",
+                "image_url_fallback": "https://images.unsplash.com/photo-1532012164546-f432f2e3777a?auto=format&fit=crop&w=600&q=80",
+                "is_featured": True,
+                "is_hot_deal": True,
+            },
+            {
+                "title": "Percy Jackson & The Olympians: The Lightning Thief",
+                "vietnamese_title": "Percy Jackson: Kẻ Trộm Tia Chớp (Thần thoại Hy Lạp hiện đại)",
+                "author": "Rick Riordan",
+                "publisher": "Disney Hyperion",
+                "category": cat_objs["young-adult"],
+                "age_group": age_objs["13-plus-teen"],
+                "condition": cond_objs[92],
+                "condition_detail": "Bìa bóng, gáy thẳng, không viết vẽ, độ mới 92%.",
+                "original_price": 270000,
+                "price": 85000,
+                "stock": 1,
+                "reading_level": "Lexile 740L / Grade 5-9",
+                "pages": 375,
+                "cover_type": "paperback",
+                "publication_year": 2019,
+                "isbn": "978-0786838653",
+                "description": "Khi Percy Jackson phát hiện mình thực ra là một Á thần con trai của thần biển Poseidon, và tia chớp của thần Zeus bị đánh cắp... Cậu cùng những người bạn bước vào cuộc phiêu lưu nguy hiểm khắp nước Mỹ để cứu mẹ và ngăn chặn cuộc chiến giữa các vị thần trên đỉnh Olympus.",
+                "image_url_fallback": "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=600&q=80",
+                "is_featured": False,
+                "is_hot_deal": False,
+            },
+            {
+                "title": "National Geographic Kids: 5,000 Awesome Facts About Everything",
+                "vietnamese_title": "5,000 Sự Thật Đầy Kinh Ngạc Về Thế Giới (Bản bìa cứng khổ lớn siêu đẹp)",
+                "author": "National Geographic",
+                "publisher": "National Geographic Kids",
+                "category": cat_objs["science-stem"],
+                "age_group": age_objs["7-9-tuoi"],
+                "condition": cond_objs[98],
+                "condition_detail": "Sách khổ lớn bìa cứng nặng tay, ảnh chụp động vật và thiên nhiên sắc nét tuyệt đỉnh.",
+                "original_price": 550000,
+                "price": 195000,
+                "stock": 1,
+                "reading_level": "Ages 8-12 / Facts & Trivia",
+                "pages": 224,
+                "cover_type": "hardcover",
+                "publication_year": 2021,
+                "isbn": "978-1426310492",
+                "description": "Kho tàng 5.000 sự thật thú vị nhất về đại dương, không gian vũ trụ, loài cá voi xanh, robot thông minh, sô-cô-la và lịch sử các nền văn minh. Hình ảnh chụp thực tế chất lượng cao đặc trưng của Nat Geo giúp bé vừa mở rộng kiến thức khoa học vừa tăng vốn từ vựng tiếng Anh học thuật.",
+                "image_url_fallback": "https://images.unsplash.com/photo-1507842229456-83210dd84c6c?auto=format&fit=crop&w=600&q=80",
+                "is_featured": True,
+                "is_hot_deal": False,
+            }
+        ]
+
+        for b_data in sample_books:
+            title = b_data["title"]
+            if not Book.objects.filter(title=title).exists():
+                Book.objects.create(**b_data)
+                self.stdout.write(f"Added book: {title}")
+
+        # 6. Tạo Đánh Giá Phụ Huynh Mẫu
+        reviews_data = [
+            ("Mẹ Thùy Trang (Hà Nội)", "Bé Su 4 tuổi", 5, "Lần đầu mua sách cũ cho con mà bất ngờ luôn vì sách sạch tinh tươm, bọc góc chống quăn mép rất cẩn thận. Cuốn Peep Inside con thích mê, lật mở suốt cả buổi tối!", "Usborne Peep Inside"),
+            ("Bố Hoàng Hải (TP.HCM)", "Bé Minh 8 tuổi", 5, "Giá sách tiếng Anh mới đắt quá, may tìm được Tiệm Sách Dino. Mua cả set Dog Man và Wimpy Kid tiết kiệm được gần cả triệu bạc. Sách đúng như ảnh chụp trên web, uy tín lắm.", "Dog Man: Brawl of the Wild"),
+            ("Mẹ Lan Anh (Đà Nẵng)", "Bé Bảo 2 tuổi", 5, "Mã VietQR thanh toán tự động rất tiện, quét cái ăn ngay. Tiệm Dino tư vấn độ tuổi siêu chuẩn, sách bìa cứng dày dặn cho bé gặm thoải mái không rách. Sẽ ủng hộ dài dài!", "The Very Hungry Caterpillar"),
+        ]
+
+        for name, child, rating, comment, book_name in reviews_data:
+            if not CustomerReview.objects.filter(customer_name=name).exists():
+                CustomerReview.objects.create(
+                    customer_name=name,
+                    child_age=child,
+                    rating=rating,
+                    comment=comment,
+                    book_bought=book_name,
+                    is_approved=True
+                )
+
+        self.stdout.write(self.style.SUCCESS("Hoan tat nap du lieu mau thanh cong!"))
+

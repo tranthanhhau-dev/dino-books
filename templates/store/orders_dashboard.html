@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Bảng Điều Khiển Quản Lý Đơn Hàng | Tiệm Sách Dino{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-stone-900 to-stone-800 text-white py-8 border-b border-stone-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <span class="text-xs font-black bg-brand-500 text-white px-3 py-1 rounded-full uppercase tracking-wider">
+                    Dành cho Chủ Tiệm
+                </span>
+                <h1 class="text-heading text-2xl md:text-3xl font-black mt-2">
+                    Quản Lý Đơn Hàng & Doanh Thu
+                </h1>
+                <p class="text-xs text-stone-400 mt-1">Theo dõi, xác nhận và cập nhật tiến độ giao sách cho phụ huynh</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="/admin/store/book/add/" class="bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all flex items-center gap-1.5 shadow">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    Đăng thêm sách mới
+                </a>
+                <a href="/admin/" class="bg-stone-700 hover:bg-stone-600 text-stone-200 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors flex items-center gap-1.5">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                    Admin toàn diện
+                </a>
+            </div>
+        </div>
+
+        <!-- 4 Quick KPI Stats Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+            <div class="bg-stone-800/80 p-4 rounded-2xl border border-stone-700">
+                <span class="text-[11px] text-stone-400 font-bold uppercase block">Tổng số đơn</span>
+                <span class="text-2xl font-black text-white mt-1 block">{{ total_orders }}</span>
+            </div>
+            <div class="bg-amber-950/40 p-4 rounded-2xl border border-amber-600/40">
+                <span class="text-[11px] text-amber-400 font-bold uppercase block">Chờ xử lý</span>
+                <span class="text-2xl font-black text-amber-400 mt-1 block">{{ pending_orders }} đơn</span>
+            </div>
+            <div class="bg-emerald-950/40 p-4 rounded-2xl border border-emerald-600/40">
+                <span class="text-[11px] text-emerald-400 font-bold uppercase block">Giao thành công</span>
+                <span class="text-2xl font-black text-emerald-400 mt-1 block">{{ completed_orders }} đơn</span>
+            </div>
+            <div class="bg-stone-800/80 p-4 rounded-2xl border border-stone-700">
+                <span class="text-[11px] text-stone-400 font-bold uppercase block">Ước tính doanh thu</span>
+                <span class="text-xl md:text-2xl font-black text-brand-400 mt-1 block">{{ total_revenue|intcomma }} đ</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Filter Tabs -->
+    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-6 text-xs font-bold">
+        <a href="{% url 'store:orders_dashboard' %}" class="px-4 py-2 rounded-xl transition-all {% if not status_filter %}bg-stone-900 text-white shadow{% else %}bg-white text-stone-600 hover:bg-stone-100 border border-stone-200{% endif %}">
+            Tất cả ({{ total_orders }})
+        </a>
+        <a href="{% url 'store:orders_dashboard' %}?status=pending" class="px-4 py-2 rounded-xl transition-all {% if status_filter == 'pending' %}bg-amber-500 text-white shadow{% else %}bg-white text-amber-800 hover:bg-amber-50 border border-amber-200{% endif %}">
+            Chờ xử lý ({{ pending_orders }})
+        </a>
+        <a href="{% url 'store:orders_dashboard' %}?status=confirmed" class="px-4 py-2 rounded-xl transition-all {% if status_filter == 'confirmed' %}bg-blue-600 text-white shadow{% else %}bg-white text-stone-600 hover:bg-stone-100 border border-stone-200{% endif %}">
+            Đã xác nhận
+        </a>
+        <a href="{% url 'store:orders_dashboard' %}?status=packing" class="px-4 py-2 rounded-xl transition-all {% if status_filter == 'packing' %}bg-purple-600 text-white shadow{% else %}bg-white text-stone-600 hover:bg-stone-100 border border-stone-200{% endif %}">
+            Đang gói sách
+        </a>
+        <a href="{% url 'store:orders_dashboard' %}?status=shipping" class="px-4 py-2 rounded-xl transition-all {% if status_filter == 'shipping' %}bg-sky-600 text-white shadow{% else %}bg-white text-stone-600 hover:bg-stone-100 border border-stone-200{% endif %}">
+            Đang giao hàng
+        </a>
+        <a href="{% url 'store:orders_dashboard' %}?status=completed" class="px-4 py-2 rounded-xl transition-all {% if status_filter == 'completed' %}bg-emerald-600 text-white shadow{% else %}bg-white text-stone-600 hover:bg-stone-100 border border-stone-200{% endif %}">
+            Hoàn thành ({{ completed_orders }})
+        </a>
+        <a href="{% url 'store:orders_dashboard' %}?status=cancelled" class="px-4 py-2 rounded-xl transition-all {% if status_filter == 'cancelled' %}bg-rose-600 text-white shadow{% else %}bg-white text-rose-700 hover:bg-rose-50 border border-rose-200{% endif %}">
+            Đã từ chối ({{ cancelled_orders }})
+        </a>
+    </div>
+
+    <!-- Orders Cards List -->
+    {% if orders %}
+        <div class="space-y-6">
+            {% for order in orders %}
+                <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-6 space-y-4 hover:shadow-md transition-shadow">
+                    
+                    <!-- Order Header -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-100 pb-3">
+                        <div class="flex items-center gap-3">
+                            <span class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center font-black text-sm">
+                                📦
+                            </span>
+                            <div>
+                                <span class="font-mono font-black text-base text-stone-900">#{{ order.order_code }}</span>
+                                <span class="text-xs text-stone-400 block">{{ order.created_at|date:"d/m/Y H:i" }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Status badges & Actions -->
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <!-- Nút trạng thái thanh toán -->
+                            <span class="px-3 py-1 rounded-full text-xs font-bold
+                                {% if order.payment_status == 'paid' %} bg-emerald-100 text-emerald-800
+                                {% else %} bg-amber-100 text-amber-800 {% endif %}">
+                                {{ order.get_payment_status_display }}
+                            </span>
+
+                            <!-- Nút Từ chối đơn hàng (Bất khả kháng) nằm cạnh nút thanh toán -->
+                            {% if order.status != 'cancelled' %}
+                                <form action="{% url 'store:orders_dashboard' %}" method="POST" class="inline" onsubmit="return confirm('Bạn có chắc chắn muốn TỪ CHỐI đơn hàng #{{ order.order_code }} không?\n\nToàn bộ sách trong đơn sẽ được tự động hoàn lại số lượng vào kho.');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="order_id" value="{{ order.id }}">
+                                    <input type="hidden" name="action" value="reject_order">
+                                    <button type="submit" class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 hover:border-rose-400 px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1 shadow-sm" title="Từ chối đơn hàng do sự kiện bất khả kháng">
+                                        <i data-lucide="ban" class="w-3.5 h-3.5"></i>
+                                        Từ chối đơn
+                                    </button>
+                                </form>
+                            {% else %}
+                                <span class="bg-rose-100 text-rose-800 border border-rose-200 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                                    <i data-lucide="x-circle" class="w-3.5 h-3.5"></i>
+                                    Đã từ chối giao
+                                </span>
+                            {% endif %}
+
+                            <!-- Trạng thái tiến độ giao hàng -->
+                            <span class="px-3 py-1 rounded-full text-xs font-bold
+                                {% if order.status == 'completed' %} bg-emerald-100 text-emerald-800
+                                {% elif order.status == 'shipping' %} bg-sky-100 text-sky-800
+                                {% elif order.status == 'packing' %} bg-purple-100 text-purple-800
+                                {% elif order.status == 'confirmed' %} bg-blue-100 text-blue-800
+                                {% elif order.status == 'cancelled' %} bg-rose-100 text-rose-800
+                                {% else %} bg-amber-100 text-amber-800 {% endif %}">
+                                {{ order.get_status_display }}
+                            </span>
+                            <a href="/admin/store/order/{{ order.id }}/change/" title="Sửa chi tiết trong Django Admin" class="p-2 text-stone-400 hover:text-stone-700 rounded-lg hover:bg-stone-100">
+                                <i data-lucide="edit-3" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <!-- Customer Info & Books -->
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start text-xs">
+                        
+                        <!-- Col 1: Customer Details (5 cols) -->
+                        <div class="md:col-span-5 bg-stone-50 p-4 rounded-2xl space-y-2">
+                            <h4 class="font-bold text-stone-900 text-sm flex items-center justify-between">
+                                <span>{{ order.customer_name }}</span>
+                                <a href="tel:{{ order.customer_phone }}" class="text-brand-600 font-extrabold hover:underline">
+                                    📞 {{ order.customer_phone }}
+                                </a>
+                            </h4>
+                            <p class="text-stone-600">
+                                📍 <strong>Địa chỉ:</strong> {{ order.shipping_address }}, {{ order.city }}
+                            </p>
+                            {% if order.customer_email %}
+                                <p class="text-stone-500">✉️ {{ order.customer_email }}</p>
+                            {% endif %}
+                            {% if order.note %}
+                                <p class="text-amber-800 bg-amber-100/60 p-2 rounded-lg italic">
+                                    "{{ order.note }}"
+                                </p>
+                            {% endif %}
+                            <div class="pt-2 border-t border-stone-200 flex items-center justify-between text-stone-500">
+                                <span>Hình thức TT: <strong>{{ order.get_payment_method_display }}</strong></span>
+                                <a href="https://zalo.me/{{ order.customer_phone }}" target="_blank" class="bg-botTeal-50 text-botTeal-700 px-2.5 py-1 rounded font-bold hover:bg-botTeal-100">
+                                    💬 Nhắn Zalo
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Col 2: Books List (4 cols) -->
+                        <div class="md:col-span-4 space-y-2">
+                            <h4 class="font-bold text-stone-900 border-b border-stone-100 pb-1">
+                                Sách đã đặt ({{ order.items.count }} cuốn)
+                            </h4>
+                            <div class="divide-y divide-stone-100">
+                                {% for item in order.items.all %}
+                                    <div class="py-1.5 flex items-center justify-between">
+                                        <span class="font-medium text-stone-800 truncate max-w-[200px]" title="{{ item.book_title }}">
+                                            {{ item.book_title }}
+                                        </span>
+                                        <span class="text-stone-500 shrink-0">
+                                            {{ item.quantity }} x {{ item.price|intcomma }}đ
+                                        </span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="pt-2 border-t border-stone-100 flex items-baseline justify-between font-bold text-stone-900">
+                                <span>Tổng tiền thu:</span>
+                                <span class="text-base text-brand-600 font-black">{{ order.total_amount|intcomma }} đ</span>
+                            </div>
+                        </div>
+
+                        <!-- Col 3: Quick Action Form (3 cols) -->
+                        <div class="md:col-span-3 bg-amber-50/50 p-4 rounded-2xl border border-amber-200/60 space-y-3">
+                            <h4 class="font-bold text-stone-900 text-xs">Cập nhật nhanh</h4>
+                            <form action="{% url 'store:orders_dashboard' %}" method="POST" class="space-y-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="order_id" value="{{ order.id }}">
+                                
+                                <div>
+                                    <label class="block text-[10px] text-stone-500 font-bold uppercase mb-1">Trạng thái đơn</label>
+                                    <select name="status" class="w-full p-2 bg-white border border-stone-300 rounded-xl text-xs font-semibold text-stone-800 focus:ring-2 focus:ring-brand-400">
+                                        {% for code, label in order.STATUS_CHOICES %}
+                                            <option value="{{ code }}" {% if order.status == code %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[10px] text-stone-500 font-bold uppercase mb-1">Thanh toán</label>
+                                    <select name="payment_status" class="w-full p-2 bg-white border border-stone-300 rounded-xl text-xs font-semibold text-stone-800 focus:ring-2 focus:ring-brand-400">
+                                        {% for code, label in order.PAYMENT_STATUS_CHOICES %}
+                                            <option value="{{ code }}" {% if order.payment_status == code %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[10px] text-stone-500 font-bold uppercase mb-1">Mã vận đơn bưu cục</label>
+                                    <input type="text" name="tracking_number" value="{{ order.tracking_number }}" placeholder="GHTK / ViettelPost..." 
+                                           class="w-full p-2 bg-white border border-stone-300 rounded-xl text-xs text-stone-800 focus:ring-2 focus:ring-brand-400">
+                                </div>
+
+                                <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2 px-3 rounded-xl transition-colors text-xs flex items-center justify-center gap-1 shadow-sm">
+                                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                    Lưu cập nhật
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="bg-white rounded-3xl border border-stone-200 p-12 text-center max-w-md mx-auto my-8">
+            <div class="text-3xl mb-3">📭</div>
+            <h3 class="font-heading font-black text-lg text-stone-900 mb-1">Chưa có đơn hàng nào</h3>
+            <p class="text-xs text-stone-500 mb-4">Các đơn hàng mới phát sinh từ khách hàng sẽ xuất hiện tự động tại đây.</p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

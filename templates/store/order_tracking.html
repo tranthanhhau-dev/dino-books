@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Tra Cứu Tiến Độ Đơn Hàng | Tiệm Sách Dino{% endblock %}
+
+{% block content %}
+<div class="bg-stone-50 border-b border-emerald-100 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <span class="text-xs font-bold bg-brand-100 text-brand-800 px-3 py-1 rounded-full uppercase">
+            Theo dõi vận đơn
+        </span>
+        <h1 class="text-heading text-2xl md:text-3xl font-black text-stone-900 mt-2 mb-2">
+            Tra Cứu Đơn Hàng Sách Của Bé
+        </h1>
+        <p class="text-xs md:text-sm text-stone-500 max-w-lg mx-auto">
+            Nhập Mã đơn hàng (ví dụ: <code class="bg-emerald-100 px-1.5 py-0.5 rounded text-brand-700 font-mono">DINO-260930-A1B2</code>) hoặc Số điện thoại đặt hàng để kiểm tra
+        </p>
+
+        <!-- Search Form -->
+        <form action="{% url 'store:order_tracking' %}" method="GET" class="mt-6 max-w-md mx-auto flex items-center gap-2">
+            <input type="text" name="query" value="{{ query|default:'' }}" required
+                   placeholder="Nhập mã đơn hoặc số điện thoại..." 
+                   class="flex-1 px-4 py-3 bg-white border border-stone-300 rounded-2xl text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 shadow-sm">
+            <button type="submit" class="bg-brand-500 hover:bg-brand-600 text-white font-black text-xs md:text-sm px-6 py-3 rounded-2xl shadow transition-colors flex items-center gap-1.5 shrink-0">
+                <i data-lucide="search" class="w-4 h-4"></i>
+                Tra cứu
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    {% if query %}
+        {% if orders %}
+            <div class="space-y-8">
+                {% for order in orders %}
+                    <div class="bg-white rounded-3xl border border-stone-200/80 shadow-sm p-6 sm:p-8 space-y-6">
+                        
+                        <!-- Order Top Bar -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-100 pb-4">
+                            <div>
+                                <span class="text-xs text-stone-400 block">Đơn hàng</span>
+                                <span class="font-mono font-black text-lg text-brand-600">#{{ order.order_code }}</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs font-bold text-stone-500">
+                                    Ngày đặt: {{ order.created_at|date:"d/m/Y H:i" }}
+                                </span>
+                                <span class="px-3 py-1 rounded-full text-xs font-bold
+                                    {% if order.status == 'completed' %} bg-emerald-100 text-emerald-800
+                                    {% elif order.status == 'shipping' %} bg-sky-100 text-sky-800
+                                    {% elif order.status == 'packing' %} bg-purple-100 text-purple-800
+                                    {% elif order.status == 'confirmed' %} bg-blue-100 text-blue-800
+                                    {% elif order.status == 'cancelled' %} bg-rose-100 text-rose-800
+                                    {% else %} bg-amber-100 text-amber-800 {% endif %}">
+                                    {{ order.get_status_display }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Visual Progress Step Bar -->
+                        <div class="py-4">
+                            <div class="grid grid-cols-5 gap-2 text-center text-xs">
+                                <!-- Step 1: Pending -->
+                                <div class="space-y-1.5">
+                                    <div class="w-8 h-8 rounded-full mx-auto flex items-center justify-center font-bold text-xs bg-emerald-500 text-white shadow">
+                                        ✓
+                                    </div>
+                                    <span class="font-bold text-stone-800 text-[11px] block">Đã nhận đơn</span>
+                                </div>
+
+                                <!-- Step 2: Confirmed -->
+                                <div class="space-y-1.5">
+                                    <div class="w-8 h-8 rounded-full mx-auto flex items-center justify-center font-bold text-xs 
+                                        {% if order.status != 'pending' and order.status != 'cancelled' %} bg-emerald-500 text-white shadow {% else %} bg-stone-100 text-stone-400 {% endif %}">
+                                        {% if order.status != 'pending' and order.status != 'cancelled' %}✓{% else %}2{% endif %}
+                                    </div>
+                                    <span class="font-medium text-stone-600 text-[11px] block">Đã xác nhận</span>
+                                </div>
+
+                                <!-- Step 3: Packing -->
+                                <div class="space-y-1.5">
+                                    <div class="w-8 h-8 rounded-full mx-auto flex items-center justify-center font-bold text-xs 
+                                        {% if order.status == 'packing' or order.status == 'shipping' or order.status == 'completed' %} bg-emerald-500 text-white shadow {% else %} bg-stone-100 text-stone-400 {% endif %}">
+                                        {% if order.status == 'packing' or order.status == 'shipping' or order.status == 'completed' %}✓{% else %}3{% endif %}
+                                    </div>
+                                    <span class="font-medium text-stone-600 text-[11px] block">Đang gói sách</span>
+                                </div>
+
+                                <!-- Step 4: Shipping -->
+                                <div class="space-y-1.5">
+                                    <div class="w-8 h-8 rounded-full mx-auto flex items-center justify-center font-bold text-xs 
+                                        {% if order.status == 'shipping' or order.status == 'completed' %} bg-emerald-500 text-white shadow {% else %} bg-stone-100 text-stone-400 {% endif %}">
+                                        {% if order.status == 'shipping' or order.status == 'completed' %}✓{% else %}4{% endif %}
+                                    </div>
+                                    <span class="font-medium text-stone-600 text-[11px] block">Đang giao hàng</span>
+                                </div>
+
+                                <!-- Step 5: Completed -->
+                                <div class="space-y-1.5">
+                                    <div class="w-8 h-8 rounded-full mx-auto flex items-center justify-center font-bold text-xs 
+                                        {% if order.status == 'completed' %} bg-emerald-500 text-white shadow {% else %} bg-stone-100 text-stone-400 {% endif %}">
+                                        {% if order.status == 'completed' %}✓{% else %}5{% endif %}
+                                    </div>
+                                    <span class="font-medium text-stone-600 text-[11px] block">Giao thành công</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tracking Number if Available -->
+                        {% if order.tracking_number %}
+                            <div class="p-3.5 bg-blue-50 border border-blue-200 rounded-2xl flex items-center justify-between text-xs text-blue-900">
+                                <span class="flex items-center gap-2">
+                                    <i data-lucide="truck" class="w-4 h-4 text-blue-600"></i>
+                                    Mã vận đơn bưu cục: <strong class="font-mono">{{ order.tracking_number }}</strong>
+                                </span>
+                                <span class="text-blue-600 font-bold">Đang vận chuyển</span>
+                            </div>
+                        {% endif %}
+
+                        <!-- Recipient details & Items -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-stone-50 p-4 rounded-2xl">
+                            <div>
+                                <span class="text-stone-400 block mb-0.5">Khách hàng:</span>
+                                <strong class="text-stone-800">{{ order.customer_name }}</strong> ({{ order.customer_phone }})
+                            </div>
+                            <div>
+                                <span class="text-stone-400 block mb-0.5">Địa chỉ nhận:</span>
+                                <span class="text-stone-800">{{ order.shipping_address }}, {{ order.city }}</span>
+                            </div>
+                            <div>
+                                <span class="text-stone-400 block mb-0.5">Thanh toán:</span>
+                                <span class="text-stone-800">{{ order.get_payment_method_display }} - <strong class="text-brand-600">{{ order.get_payment_status_display }}</strong></span>
+                            </div>
+                            <div>
+                                <span class="text-stone-400 block mb-0.5">Tổng tiền đơn:</span>
+                                <strong class="text-base text-brand-600 font-black">{{ order.total_amount|intcomma }} đ</strong>
+                            </div>
+                        </div>
+
+                        <!-- Items list -->
+                        <div class="divide-y divide-stone-100 text-xs">
+                            {% for item in order.items.all %}
+                                <div class="py-2.5 flex items-center justify-between">
+                                    <span class="font-semibold text-stone-800">{{ item.book_title }}</span>
+                                    <span class="text-stone-500">{{ item.quantity }} cuốn x {{ item.price|intcomma }}đ</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="bg-white rounded-3xl border border-stone-200 p-12 text-center max-w-md mx-auto">
+                <div class="text-3xl mb-3">🔍</div>
+                <h3 class="font-heading font-black text-lg text-stone-900 mb-1">
+                    Không tìm thấy đơn hàng nào
+                </h3>
+                <p class="text-xs text-stone-500 mb-6 leading-relaxed">
+                    Không tìm thấy đơn hàng khớp với thông tin "<strong>{{ query }}</strong>". Ba/mẹ vui lòng kiểm tra lại số điện thoại hoặc mã đơn nhé!
+                </p>
+                <a href="https://zalo.me/{{ shop_zalo }}" target="_blank" class="bg-dinoTeal-50 text-dinoTeal-800 font-bold text-xs px-4 py-2.5 rounded-xl border border-dinoTeal-200 inline-flex items-center gap-1.5">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    Nhờ Tiệm Dino hỗ trợ qua Zalo
+                </a>
+            </div>
+        {% endif %}
+    {% else %}
+        <!-- Default State info -->
+        <div class="bg-white rounded-3xl border border-stone-200/80 p-8 text-center max-w-lg mx-auto text-xs text-stone-600 space-y-3">
+            <div class="w-12 h-12 bg-brand-50 text-brand-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                <i data-lucide="package-search" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-bold text-stone-900 text-sm">Tiến độ giao sách tại Tiệm Dino</h3>
+            <p class="text-stone-500 leading-relaxed">
+                Đơn hàng sau khi đặt thành công sẽ được đóng gói trong ngày và bàn giao cho Viettel Post / GHTK. Thời gian nhận sách: Nội thành Hà Nội 24h, các tỉnh khác từ 2-3 ngày làm việc.
+            </p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
