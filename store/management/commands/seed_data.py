@@ -3,14 +3,14 @@ from django.contrib.auth.models import User
 from store.models import Category, AgeGroup, BookCondition, Book, CustomerReview
 
 class Command(BaseCommand):
-    help = "Tạo dữ liệu mẫu ban đầu cho Tiệm Sách Dino"
+    help = "Tạo dữ liệu mẫu ban đầu cho Dino Books"
 
     def handle(self, *args, **kwargs):
         self.stdout.write("Bat dau nap du lieu mau...")
 
         # 1. Tao Superuser Admin
         if not User.objects.filter(username="admin").exists():
-            User.objects.create_superuser("admin", "admin@tiemsachdino.vn", "admindino123")
+            User.objects.create_superuser("admin", "admin@dinobooks.vn", "admindino123")
             self.stdout.write(self.style.SUCCESS("Da tao tai khoan quan tri admin / admindino123"))
 
 
@@ -344,8 +344,8 @@ class Command(BaseCommand):
         # 6. Tạo Đánh Giá Phụ Huynh Mẫu
         reviews_data = [
             ("Mẹ Thùy Trang (Hà Nội)", "Bé Su 4 tuổi", 5, "Lần đầu mua sách cũ cho con mà bất ngờ luôn vì sách sạch tinh tươm, bọc góc chống quăn mép rất cẩn thận. Cuốn Peep Inside con thích mê, lật mở suốt cả buổi tối!", "Usborne Peep Inside"),
-            ("Bố Hoàng Hải (TP.HCM)", "Bé Minh 8 tuổi", 5, "Giá sách tiếng Anh mới đắt quá, may tìm được Tiệm Sách Dino. Mua cả set Dog Man và Wimpy Kid tiết kiệm được gần cả triệu bạc. Sách đúng như ảnh chụp trên web, uy tín lắm.", "Dog Man: Brawl of the Wild"),
-            ("Mẹ Lan Anh (Đà Nẵng)", "Bé Bảo 2 tuổi", 5, "Mã VietQR thanh toán tự động rất tiện, quét cái ăn ngay. Tiệm Dino tư vấn độ tuổi siêu chuẩn, sách bìa cứng dày dặn cho bé gặm thoải mái không rách. Sẽ ủng hộ dài dài!", "The Very Hungry Caterpillar"),
+            ("Bố Hoàng Hải (TP.HCM)", "Bé Minh 8 tuổi", 5, "Giá sách tiếng Anh mới đắt quá, may tìm được Dino Books. Mua cả set Dog Man và Wimpy Kid tiết kiệm được gần cả triệu bạc. Sách đúng như ảnh chụp trên web, uy tín lắm.", "Dog Man: Brawl of the Wild"),
+            ("Mẹ Lan Anh (Đà Nẵng)", "Bé Bảo 2 tuổi", 5, "Mã VietQR thanh toán tự động rất tiện, quét cái ăn ngay. Dino Books tư vấn độ tuổi siêu chuẩn, sách bìa cứng dày dặn cho bé gặm thoải mái không rách. Sẽ ủng hộ dài dài!", "The Very Hungry Caterpillar"),
         ]
 
         for name, child, rating, comment, book_name in reviews_data:

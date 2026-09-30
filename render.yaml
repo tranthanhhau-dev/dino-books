@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: tiem-sach-dino
+    name: dino-books
     runtime: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn tiem_sach_bot.wsgi:application"

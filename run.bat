@@ -1,11 +1,11 @@
 @echo off
 chcp 65001 > nul
-title Tiệm Sách Dino - Khởi Động Website
+title Dino Books - Khởi Động Website
 echo ========================================================
-echo        TIỆM SÁCH DINO - WEBSITE BÁN SÁCH CŨ
+echo             DINO BOOKS - WEBSITE BÁN SÁCH CŨ
 echo ========================================================
 echo.
-echo Đang khởi động hệ thống máy chủ Tiệm Sách Dino...
+echo Đang khởi động hệ thống máy chủ Dino Books...
 echo.
 
 set PYTHON_CMD="C:\Users\tthau\AppData\Local\Programs\Python312\python.exe"

@@ -1,9 +1,9 @@
-{% load humanize %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Đơn hàng mới #{{ order.order_code }}</title>
+    <title>Đơn hàng mới #DINO-260930-2B70</title>
 </head>
 <body style="margin: 0; padding: 20px; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #334155;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;">
@@ -14,7 +14,7 @@
                 <h1 style="margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">Dino Books 🦖</h1>
                 <p style="margin: 6px 0 0 0; font-size: 13px; opacity: 0.9;">Thông báo đơn hàng mới từ Website</p>
                 <div style="display: inline-block; background: rgba(255,255,255,0.2); padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: bold; margin-top: 12px;">
-                    Mã đơn: #{{ order.order_code }}
+                    Mã đơn: #DINO-260930-2B70
                 </div>
             </td>
         </tr>
@@ -37,39 +37,39 @@
                 <table width="100%" style="font-size: 13px; line-height: 1.6; color: #475569;">
                     <tr>
                         <td width="35%" style="color: #94a3b8;">Họ và tên:</td>
-                        <td><strong style="color: #0f172a; font-size: 14px;">{{ order.customer_name }}</strong></td>
+                        <td><strong style="color: #0f172a; font-size: 14px;">Mẹ Thùy Trang</strong></td>
                     </tr>
                     <tr>
                         <td style="color: #94a3b8;">Số điện thoại:</td>
                         <td>
-                            <a href="tel:{{ order.customer_phone }}" style="color: #16a34a; font-weight: bold; text-decoration: none; font-size: 14px;">
-                                📞 {{ order.customer_phone }} (Bấm để gọi ngay)
+                            <a href="tel:0965112006" style="color: #16a34a; font-weight: bold; text-decoration: none; font-size: 14px;">
+                                📞 0965112006 (Bấm để gọi ngay)
                             </a>
                         </td>
                     </tr>
                     <tr>
                         <td style="color: #94a3b8;">Địa chỉ giao hàng:</td>
-                        <td style="color: #1e293b;">{{ order.shipping_address }}, {{ order.city }}</td>
+                        <td style="color: #1e293b;">Số 18 Hoàng Quốc Việt, Cầu Giấy, Hà Nội</td>
                     </tr>
-                    {% if order.customer_email %}
+                    
                     <tr>
                         <td style="color: #94a3b8;">Email:</td>
-                        <td>{{ order.customer_email }}</td>
+                        <td>thuytrang@gmail.com</td>
                     </tr>
-                    {% endif %}
-                    {% if order.note %}
+                    
+                    
                     <tr>
                         <td style="color: #94a3b8;">Ghi chú của khách:</td>
                         <td style="color: #b45309; background: #fffbeb; padding: 4px 8px; border-radius: 6px; font-style: italic;">
-                            "{{ order.note }}"
+                            "Bọc góc sách giúp mình nhé"
                         </td>
                     </tr>
-                    {% endif %}
+                    
                     <tr>
                         <td style="color: #94a3b8;">Phương thức TT:</td>
                         <td>
                             <span style="background: #f1f5f9; padding: 3px 8px; border-radius: 6px; font-weight: 600; color: #334155;">
-                                {{ order.get_payment_method_display }}
+                                Thanh toán tiền mặt khi nhận sách (COD)
                             </span>
                         </td>
                     </tr>
@@ -81,7 +81,7 @@
         <tr>
             <td style="padding: 15px 24px;">
                 <h3 style="margin: 0 0 12px 0; font-size: 15px; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px;">
-                    📚 Danh sách sách đã đặt ({{ order.items.count }} cuốn)
+                    📚 Danh sách sách đã đặt (1 cuốn)
                 </h3>
                 <table width="100%" cellspacing="0" cellpadding="8" style="font-size: 13px; border-collapse: collapse;">
                     <thead>
@@ -93,22 +93,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for item in order.items.all %}
+                        
                         <tr>
                             <td style="border-bottom: 1px solid #f1f5f9; color: #1e293b; font-weight: 600;">
-                                {{ item.book_title }}
+                                Collins Big Cat Phonics: Pod Digs a Pit
                             </td>
                             <td style="border-bottom: 1px solid #f1f5f9; text-align: center; color: #64748b;">
-                                {{ item.quantity }}
+                                1
                             </td>
                             <td style="border-bottom: 1px solid #f1f5f9; text-align: right; color: #64748b;">
-                                {{ item.price|intcomma }}đ
+                                25000đ
                             </td>
                             <td style="border-bottom: 1px solid #f1f5f9; text-align: right; color: #0f172a; font-weight: bold;">
-                                {{ item.line_total|intcomma }}đ
+                                25000đ
                             </td>
                         </tr>
-                        {% endfor %}
+                        
                     </tbody>
                 </table>
             </td>
@@ -120,21 +120,19 @@
                 <table width="100%" style="font-size: 13px; line-height: 1.8; color: #475569; background-color: #f8fafc; border-radius: 12px; padding: 14px;">
                     <tr>
                         <td>Tiền sách:</td>
-                        <td align="right"><strong>{{ order.subtotal|intcomma }}đ</strong></td>
+                        <td align="right"><strong>25000đ</strong></td>
                     </tr>
                     <tr>
                         <td>Phí vận chuyển:</td>
                         <td align="right">
-                            {% if order.shipping_fee == 0 %}
-                                <span style="color: #059669; font-weight: bold;">0đ (Freeship)</span>
-                            {% else %}
-                                <strong>{{ order.shipping_fee|intcomma }}đ</strong>
-                            {% endif %}
+                            
+                                <strong>25000đ</strong>
+                            
                         </td>
                     </tr>
                     <tr style="font-size: 16px; border-top: 2px dashed #cbd5e1;">
                         <td style="padding-top: 8px;"><strong style="color: #0f172a;">TỔNG THU:</strong></td>
-                        <td align="right" style="padding-top: 8px;"><strong style="color: #16a34a; font-size: 18px;">{{ order.total_amount|intcomma }}đ</strong></td>
+                        <td align="right" style="padding-top: 8px;"><strong style="color: #16a34a; font-size: 18px;">50000đ</strong></td>
                     </tr>
                 </table>
             </td>
@@ -151,7 +149,7 @@
                    style="display: inline-block; background-color: #16a34a; color: #ffffff; text-decoration: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; font-size: 13px; margin: 4px;">
                     📱 Mở Bằng Điện Thoại (Cùng Wi-Fi)
                 </a>
-                <a href="https://zalo.me/{{ order.customer_phone }}" target="_blank"
+                <a href="https://zalo.me/0965112006" target="_blank"
                    style="display: inline-block; background-color: #0284c7; color: #ffffff; text-decoration: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; font-size: 13px; margin: 4px;">
                     💬 Nhắn Zalo Cho Khách
                 </a>
@@ -163,7 +161,7 @@
         <tr>
             <td style="background-color: #0f172a; padding: 18px 24px; text-align: center; color: #94a3b8; font-size: 11px;">
                 Email tự động gửi từ hệ thống <strong>Dino Books</strong> khi có đơn hàng mới.<br>
-                Thời gian đặt hàng: {{ order.created_at|date:"d/m/Y H:i:s" }}
+                Thời gian đặt hàng: 30/09/2026 21:27:39
             </td>
         </tr>
 

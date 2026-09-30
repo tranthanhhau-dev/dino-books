@@ -17,7 +17,7 @@ def store_context(request):
         'all_age_groups': age_groups,
         'all_conditions': conditions,
         'cart_count': cart_count,
-        'shop_name': 'Tiệm Sách Dino',
+        'shop_name': 'Dino Books',
         'shop_hotline': '0965.112.006',
         'shop_zalo': '0965112006',
         'shop_email': 'pttan.nv@gmail.com',
@@ -25,6 +25,6 @@ def store_context(request):
         'bank_info': {
             'bank_id': 'MB', # MBBank
             'account_no': '0965112006',
-            'account_name': 'TIEM SACH DINO',
+            'account_name': 'DINO BOOKS',
         }
     }

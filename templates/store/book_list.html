@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load humanize %}
 
-{% block title %}Kho Sách Tiếng Anh Cũ | Tiệm Sách Dino{% endblock %}
+{% block title %}Kho Sách Tiếng Anh Cũ | Dino Books{% endblock %}
 
 {% block content %}
 <div class="bg-stone-50 border-b border-emerald-100 py-6">
@@ -214,7 +214,7 @@
                         Chưa tìm thấy cuốn sách phù hợp
                     </h3>
                     <p class="text-xs text-stone-500 mb-6 leading-relaxed">
-                        Có thể cuốn sách này vừa được một phụ huynh khác mua trước hoặc chưa có trong kho. Bạn thử xóa bớt bộ lọc hoặc nhắn Zalo cho Tiệm Dino tìm giúp nhé!
+                        Có thể cuốn sách này vừa được một phụ huynh khác mua trước hoặc chưa có trong kho. Bạn thử xóa bớt bộ lọc hoặc nhắn Zalo cho Dino Books tìm giúp nhé!
                     </p>
                     <div class="flex items-center justify-center gap-3">
                         <a href="{% url 'store:book_list' %}" class="bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all">
@@ -222,7 +222,7 @@
                         </a>
                         <a href="https://zalo.me/{{ shop_zalo }}" target="_blank" class="bg-dinoTeal-50 hover:bg-dinoTeal-100 text-dinoTeal-800 font-bold text-xs px-4 py-2.5 rounded-xl border border-dinoTeal-200 transition-all flex items-center gap-1.5">
                             <i data-lucide="message-circle" class="w-4 h-4"></i>
-                            Nhờ Tiệm Dino tìm sách qua Zalo
+                            Nhờ Dino Books tìm sách qua Zalo
                         </a>
                     </div>
                 </div>

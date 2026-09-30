@@ -1,17 +1,17 @@
 @echo off
 chcp 65001 > nul
-title Đẩy Mã Nguồn Tiệm Sách Dino Lên GitHub
+title Đẩy Mã Nguồn Dino Books Lên GitHub
 echo =========================================================================
-echo             ĐẨY MÃ NGUỒN TIỆM SÁCH DINO LÊN GITHUB
+echo             ĐẨY MÃ NGUỒN DINO BOOKS LÊN GITHUB
 echo =========================================================================
 echo.
 echo Bước 1: Hãy đăng nhập https://github.com và tạo 1 repository mới:
-echo         - Đặt tên Repository: tiem-sach-dino
+echo         - Đặt tên Repository: dino-books (hoặc tùy chọn)
 echo         - Để chế độ Public hoặc Private
 echo         - Không tích chọn "Add a README file"
 echo.
 echo Bước 2: Dán đường link Repository của bạn vào bên dưới (đuôi .git)
-echo         Ví dụ: https://github.com/ten-cua-ban/tiem-sach-dino.git
+echo         Ví dụ: https://github.com/ten-cua-ban/dino-books.git
 echo.
 set /p REPO_URL="Nhập link GitHub Repository: "
 

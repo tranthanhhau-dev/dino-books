@@ -9,7 +9,7 @@ from .utils import send_order_notification_email
 
 def home_view(request):
     """
-    Trang chủ Tiệm Sách Dino
+    Trang chủ Dino Books
     """
     featured_books = Book.objects.filter(is_featured=True, stock__gt=0)[:8]
     hot_deals = Book.objects.filter(is_hot_deal=True, stock__gt=0)[:6]
@@ -199,7 +199,7 @@ def add_to_cart(request, book_id):
         }
         messages.success(request, f"Đã thêm «{book.title}» vào giỏ hàng thành công!")
     else:
-        messages.warning(request, f"Cuốn này tại Tiệm Dino chỉ còn {book.stock} cuốn duy nhất!")
+        messages.warning(request, f"Cuốn này tại Dino Books chỉ còn {book.stock} cuốn duy nhất!")
 
     request.session['cart'] = cart
     request.session.modified = True
@@ -405,7 +405,7 @@ def trade_in_view(request):
                 address=address,
                 photo=photo
             )
-            messages.success(request, "Cảm ơn ba/mẹ! Tiệm Sách Dino đã nhận được thông tin và sẽ liên hệ qua Zalo/SĐT trong vòng 24h để báo giá thu mua ạ!")
+            messages.success(request, "Cảm ơn ba/mẹ! Dino Books đã nhận được thông tin và sẽ liên hệ qua Zalo/SĐT trong vòng 24h để báo giá thu mua ạ!")
             return redirect('store:trade_in')
 
     return render(request, 'store/trade_in.html')
@@ -413,7 +413,7 @@ def trade_in_view(request):
 
 def about_view(request):
     """
-    Giới thiệu Tiệm Sách Dino & Tiêu chuẩn tuyển chọn sách cũ
+    Giới thiệu Dino Books & Tiêu chuẩn tuyển chọn sách cũ
     """
     conditions = BookCondition.objects.all().order_by('-rating_percentage')
     return render(request, 'store/about.html', {'conditions': conditions})
@@ -424,7 +424,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 @staff_member_required(login_url='/admin/login/')
 def shop_orders_dashboard(request):
     """
-    Trang Quản trị Đơn hàng trực quan dành riêng cho chủ tiệm Dino
+    Trang Quản trị Đơn hàng trực quan dành riêng cho chủ tiệm Dino Books
     Yêu cầu tài khoản admin mới xem được
     """
     status_filter = request.GET.get('status', '')
@@ -490,8 +490,8 @@ def manifest_view(request):
     Khai báo Web App Manifest (PWA) cho thiết bị di động
     """
     manifest_data = {
-        "name": "Tiệm Sách Dino",
-        "short_name": "Tiệm Sách Dino",
+        "name": "Dino Books",
+        "short_name": "Dino Books",
         "description": "Website Bán Sách Tiếng Anh Cũ Tuyển Chọn Cho Thiếu Nhi & Trẻ Vị Thành Niên",
         "start_url": "/",
         "display": "standalone",

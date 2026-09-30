@@ -14,7 +14,7 @@ client = Client()
 print("1. Testing Home page...")
 res = client.get('/')
 assert res.status_code == 200, f"Home failed: {res.status_code}"
-assert "Tiệm Sách Dino" in res.content.decode('utf-8')
+assert "Dino Books" in res.content.decode('utf-8')
 print("-> Home OK")
 
 print("2. Testing Catalog...")

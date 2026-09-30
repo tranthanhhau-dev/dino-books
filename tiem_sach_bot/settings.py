@@ -163,7 +163,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'tranthanhhaumail@gmail.com'
 EMAIL_HOST_PASSWORD = 'vbyf uoqx uibc jpjk'.replace(' ', '')
-DEFAULT_FROM_EMAIL = 'Tiệm Sách Dino <pttan.nv@gmail.com>'
+DEFAULT_FROM_EMAIL = 'Dino Books <pttan.nv@gmail.com>'
 
 
 

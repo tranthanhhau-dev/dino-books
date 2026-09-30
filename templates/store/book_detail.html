@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load humanize static %}
 
-{% block title %}{{ book.title }} - Tiệm Sách Dino{% endblock %}
+{% block title %}{{ book.title }} - Dino Books{% endblock %}
 
 {% block content %}
 <div class="bg-stone-50 border-b border-emerald-100 py-3">
@@ -76,11 +76,11 @@
             </div>
 
             <div class="text-center">
-                <a href="https://zalo.me/{{ shop_zalo }}?text=Chào Tiệm Dino, mình muốn xem thêm video/ảnh ruột cuốn: {{ book.title|urlencode }}" 
+                <a href="https://zalo.me/{{ shop_zalo }}?text=Chào Dino Books, mình muốn xem thêm video/ảnh ruột cuốn: {{ book.title|urlencode }}" 
                    target="_blank" 
                    class="inline-flex items-center gap-1.5 text-xs font-bold text-dinoTeal-700 hover:text-dinoTeal-800 bg-dinoTeal-50 border border-dinoTeal-200 px-4 py-2 rounded-xl transition-colors">
                     <i data-lucide="video" class="w-4 h-4 text-dinoTeal-600"></i>
-                    Yêu cầu Tiệm Dino quay video thật cuốn này qua Zalo
+                    Yêu cầu Dino Books quay video thật cuốn này qua Zalo
                 </a>
             </div>
         </div>
@@ -151,7 +151,7 @@
                         </div>
                     {% else %}
                         <div class="text-stone-500 font-bold">
-                            ⚠️ Tạm thời hết hàng (Bạn có thể nhắn tin để Tiệm Dino gom đợt tới)
+                            ⚠️ Tạm thời hết hàng (Bạn có thể nhắn tin để Dino Books gom đợt tới)
                         </div>
                     {% endif %}
                     <span class="text-stone-500 text-[11px]">Giao hàng 2-3 ngày</span>
@@ -190,11 +190,11 @@
                     </div>
                 {% endif %}
 
-                <a href="https://zalo.me/{{ shop_zalo }}?text=Chào Tiệm Dino, mình muốn hỏi về cuốn: {{ book.title|urlencode }} ({{ book.price|intcomma }}đ)" 
+                <a href="https://zalo.me/{{ shop_zalo }}?text=Chào Dino Books, mình muốn hỏi về cuốn: {{ book.title|urlencode }} ({{ book.price|intcomma }}đ)" 
                    target="_blank" 
                    class="w-full bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold py-3 px-4 rounded-2xl text-center transition-colors flex items-center justify-center gap-2 text-xs">
                     <i data-lucide="message-circle" class="w-4 h-4 text-dinoTeal-600"></i>
-                    Nhắn Zalo với Tiệm Dino về cuốn sách này
+                    Nhắn Zalo với Dino Books về cuốn sách này
                 </a>
             </div>
 

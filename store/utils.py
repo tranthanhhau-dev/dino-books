@@ -10,7 +10,7 @@ def send_order_notification_email(order):
     Gửi email thông báo đơn hàng mới cho chủ shop tại pttan.nv@gmail.com
     """
     to_email = getattr(settings, 'SHOP_NOTIFICATION_EMAIL', 'pttan.nv@gmail.com')
-    subject = f"[Tiệm Sách Dino] 🔔 Đơn hàng mới #{order.order_code} từ {order.customer_name} ({int(order.total_amount):,}đ)"
+    subject = f"[Dino Books] 🔔 Đơn hàng mới #{order.order_code} từ {order.customer_name} ({int(order.total_amount):,}đ)"
     
     context = {'order': order}
     try:
@@ -33,7 +33,7 @@ def send_order_notification_email(order):
 
     # Gửi qua hệ thống Email Django
     try:
-        from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'Tiệm Sách Dino <pttan.nv@gmail.com>')
+        from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'Dino Books <pttan.nv@gmail.com>')
         msg = EmailMultiAlternatives(
             subject=subject,
             body=text_content,

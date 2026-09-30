@@ -1,11 +1,11 @@
-# 🦖📚 TIỆM SÁCH DINO
+# 🦖📚 DINO BOOKS
 ### Website Bán Sách Tiếng Anh Cũ Tuyển Chọn Cho Thiếu Nhi & Trẻ Vị Thành Niên
 
-Chào mừng bạn đến với **Tiệm Sách Dino**! Đây là hệ thống web app thương mại điện tử hoàn chỉnh, hiện đại, được thiết kế chuyên biệt cho việc kinh doanh dòng **sách tiếng Anh cũ (secondhand)** cho trẻ em từ 0 - 16 tuổi.
+Chào mừng bạn đến với **Dino Books**! Đây là hệ thống web app thương mại điện tử hoàn chỉnh, hiện đại, được thiết kế chuyên biệt cho việc kinh doanh dòng **sách tiếng Anh cũ (secondhand)** cho trẻ em từ 0 - 16 tuổi.
 
 ---
 
-## 🎨 1. Logo Thương Hiệu "Tiệm Sách Dino"
+## 🎨 1. Logo Thương Hiệu "Dino Books"
 - **Ý tưởng:** Bé khủng long Dino xanh đáng yêu đội mũ thám hiểm / đeo kính thông thái đang say mê đọc cuốn sách tiếng Anh rực rỡ, xung quanh là thiên nhiên tươi mát, lá cây xanh và những ngôi sao sáng tượng trưng cho tri thức và niềm vui học tập.
 - **Tông màu chủ đạo:** Các sắc xanh tươi sáng, năng động (xanh lá cây Dino Emerald/Green, xanh ngọc Teal, xanh đại dương Sky/Ocean Blue) tạo cảm giác tươi mới, thân thiện, tràn đầy sức sống.
 - **Vị trí file logo:**
@@ -36,7 +36,7 @@ Chào mừng bạn đến với **Tiệm Sách Dino**! Đây là hệ thống we
    - Đánh giá cụ thể tình trạng cuốn sách đang bán (Ví dụ: "Gáy nguyên vẹn, ruột sạch tinh, không viết vẽ").
    - So sánh giá thanh lý với giá bìa gốc (% tiết kiệm).
    - Thông số chi tiết: Trình độ đọc (Lexile / Guided Reading / CEFR), Nhà xuất bản (Oxford, Usborne, Scholastic...), Số trang, Năm xuất bản, ISBN.
-   - Nút **"Yêu cầu Tiệm Dino quay video thật cuốn này qua Zalo"**.
+   - Nút **"Yêu cầu Dino Books quay video thật cuốn này qua Zalo"**.
 
 4. **Giỏ hàng & Thanh toán tiện lợi (COD):**
    - Thanh tiến trình **Freeship toàn quốc** (Mua thêm ...đ để được miễn phí ship).

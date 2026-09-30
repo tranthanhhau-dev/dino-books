@@ -2,8 +2,8 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import Category, AgeGroup, BookCondition, Book, Order, OrderItem, TradeInRequest, CustomerReview
 
-admin.site.site_header = "Tiệm Sách Dino - Quản Trị Hệ Thống"
-admin.site.site_title = "Quản lý Tiệm Sách Dino"
+admin.site.site_header = "Dino Books - Quản Trị Hệ Thống"
+admin.site.site_title = "Quản lý Dino Books"
 admin.site.index_title = "Bảng điều khiển Kho sách & Đơn hàng"
 
 @admin.register(Category)

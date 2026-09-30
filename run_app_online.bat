@@ -1,12 +1,12 @@
 @echo off
 chcp 65001 > nul
-title Tiệm Sách Dino - Chạy Web App Online (HTTPS)
+title Dino Books - Chạy Web App Online (HTTPS)
 echo ========================================================
-echo        TIỆM SÁCH DINO - CHẠY WEB & CLOUDFLARE TUNNEL
+echo             DINO BOOKS - CHẠY WEB & CLOUDFLARE TUNNEL
 echo ========================================================
 echo.
 echo 1. Đang khởi động Django Server (Cổng 8088)...
-start "Django Server - Tiệm Dino" cmd /c "python manage.py runserver 0.0.0.0:8088"
+start "Django Server - Dino Books" cmd /c "python manage.py runserver 0.0.0.0:8088"
 
 timeout /t 3 /nobreak > nul
 

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load humanize %}
 
-{% block title %}Đặt Hàng Thành Công #{{ order.order_code }} | Tiệm Sách Dino{% endblock %}
+{% block title %}Đặt Hàng Thành Công #{{ order.order_code }} | Dino Books{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
@@ -15,10 +15,10 @@
             Đặt hàng thành công
         </span>
         <h1 class="text-heading text-2xl sm:text-3xl font-black text-stone-900 mt-3 mb-2">
-            Cảm Ơn Ba/Mẹ Đã Ủng Hộ Tiệm Sách Dino!
+            Cảm Ơn Ba/Mẹ Đã Ủng Hộ Dino Books!
         </h1>
         <p class="text-xs sm:text-sm text-stone-600 max-w-lg mx-auto leading-relaxed">
-            Đơn hàng của bạn đã được ghi nhận vào hệ thống. Tiệm Dino sẽ kiểm tra kỹ từng cuốn sách, đóng gói 3 lớp chống sốc và gửi đi sớm nhất nhé!
+            Đơn hàng của bạn đã được ghi nhận vào hệ thống. Dino Books sẽ kiểm tra kỹ từng cuốn sách, đóng gói 3 lớp chống sốc và gửi đi sớm nhất nhé!
         </p>
 
         <!-- Order Code Box -->
@@ -129,7 +129,7 @@
                 <i data-lucide="compass" class="w-4 h-4"></i>
                 Tiếp tục xem sách
             </a>
-            <a href="https://zalo.me/{{ shop_zalo }}?text=Chào Tiệm Dino, mình vừa đặt đơn hàng #{{ order.order_code }} ạ!" 
+            <a href="https://zalo.me/{{ shop_zalo }}?text=Chào Dino Books, mình vừa đặt đơn hàng #{{ order.order_code }} ạ!" 
                target="_blank" 
                class="bg-dinoTeal-50 hover:bg-dinoTeal-100 text-dinoTeal-700 border border-dinoTeal-200 font-bold px-5 py-3 rounded-xl text-xs transition-colors flex items-center gap-1.5">
                 <i data-lucide="message-circle" class="w-4 h-4"></i>
